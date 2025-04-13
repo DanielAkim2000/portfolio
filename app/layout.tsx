@@ -41,7 +41,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          {children}
+          <main className="xl:max-w-7xl max-w-6xl mx-auto px-4 xl:px-0">
+            {children}
+          </main>
           <Footer />
           <Toaster />
         </ThemeProvider>

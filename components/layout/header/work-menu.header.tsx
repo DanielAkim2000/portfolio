@@ -13,7 +13,7 @@ export type HeaderWorkMenuProps = {};
 
 const Trigger = ({ rotate }: { rotate?: boolean }) => (
   <div className="flex items-center rounded-full bg-accent px-3.5 py-2">
-    <span className="text-sm cursor-pointer">Work</span>
+    <span className="text-sm cursor-pointer lg:cursor-default">Work</span>
     <ChevronDown
       className={`ml-0.5 text-sm ${rotate ? "-rotate-90" : ""}`}
       size={15}

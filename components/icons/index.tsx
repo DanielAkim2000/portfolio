@@ -1,3 +1,5 @@
+"use client";
+
 export { FigmaIcon } from "./figma.icon";
 export { ExpoIcon } from "./expo.icon";
 export { TailwindIcon } from "./tailwind.icon";

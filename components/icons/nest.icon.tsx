@@ -1,3 +1,5 @@
+"use client";
+
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
 import { useState } from "react";
 

@@ -32,7 +32,7 @@ const CardHome = ({
   description: string;
 }) => {
   return (
-    <div className="flex flex-row max-w-96 border rounded-lg flex-1">
+    <div className="flex flex-row max-w-96 border rounded-lg flex-1 bg-white dark:bg-slate-900">
       {/* Ce parent devient le conteneur relatif */}
       <div className="w-8 border-r">
         <div className="w-8 h-8 border-b relative">

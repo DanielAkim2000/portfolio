@@ -13,7 +13,7 @@ export const IconHeader = (props: IconHeaderProps) => {
         <div
           className={`${
             pathname === "/" ? "bg-primary" : "bg-transparent"
-          }  border-2 sm:h-7 sm:w-7 h-8 w-8 border-primary items-center justify-center flex sm:rounded-sm rounded-sm`}
+          }  border-2 sm:h-7 sm:w-7 h-8 w-8 border-primary items-center justify-center flex rounded-[10]`}
         >
           <div
             className={`

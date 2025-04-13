@@ -53,30 +53,32 @@ const Header = () => {
         className={`w-full pt-2  bg-white dark:bg-black `}
       />
       <nav
-        className={`py-4 px-4  pt-4 flex justify-between items-center ${
+        className={`py-4 px-4 pt-4 flex items-center ${
           !focusMode && "sticky top-0 z-50"
         } bg-white dark:bg-black ${
           isSticky && !focusMode ? "border-b bg-background" : ""
         }`}
       >
-        <ul className={`flex items-center gap-4 `}>
-          <li>
-            <IconHeader />
-          </li>
-          <li>
-            <HeaderLink text="Projects" href="/projects" />
-          </li>
-          <li>
-            <HeaderLink text="Blog" href="/blog" />
-          </li>
-          <li>
-            <HeaderLink text="T.I.L" href="/til" />
-          </li>
-          <li>
-            <HeaderWorkMenu />
-          </li>
-        </ul>
-        <HeaderSheet />
+        <div className="max-w-[120rem] w-full mx-auto flex justify-between items-center">
+          <ul className={`flex items-center gap-4 `}>
+            <li>
+              <IconHeader />
+            </li>
+            <li>
+              <HeaderLink text="Projects" href="/projects" />
+            </li>
+            <li>
+              <HeaderLink text="Blog" href="/blog" />
+            </li>
+            <li>
+              <HeaderLink text="T.I.L" href="/til" />
+            </li>
+            <li>
+              <HeaderWorkMenu />
+            </li>
+          </ul>
+          <HeaderSheet />
+        </div>
       </nav>
     </>
   );

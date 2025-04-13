@@ -51,7 +51,7 @@ export const HeaderSheet = (props: HeaderSheetProps) => {
         </div>
       </DialogTrigger>
       <DialogContent className="min-w-full min-h-full pt-14 px-4 flex flex-row opacity-90 rounded-none border-0">
-        <div className="sm:w-80 ml-auto w-full">
+        <div className="sm:w-[320px] ml-auto w-full">
           <DialogTitle className="text-start text-2xl font-semibold mb-4">
             Action Center
           </DialogTitle>
