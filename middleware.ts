@@ -1,5 +1,5 @@
 // middleware.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { defineRouting } from "next-intl/routing";
 import { locales, defaultLocale } from "./i18nConfig";
@@ -19,11 +19,7 @@ export async function middleware(request: NextRequest) {
 
   // 3) Si on a besoin de la session, on l'ajoute **avant** de renvoyer intlResponse
   if (needsSession) {
-    // On modifie directement intlResponse pour lui ajouter un cookie
-    const response = NextResponse.next({
-      headers: intlResponse.headers,
-    });
-    response.cookies.set({
+    intlResponse.cookies.set({
       name: "sessionId",
       value: newSessionId,
       httpOnly: true,
@@ -32,16 +28,6 @@ export async function middleware(request: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    // On copie aussi la localisation / redirect i18n
-    response.headers.set(
-      "location",
-      intlResponse.headers.get("location") || ""
-    );
-    response.headers.set(
-      "x-nextjs-middleware-rewrite",
-      intlResponse.headers.get("x-nextjs-middleware-rewrite") || ""
-    );
-    return response;
   }
 
   // 4) Pas besoin de session, on renvoie la réponse i18n telle quelle
