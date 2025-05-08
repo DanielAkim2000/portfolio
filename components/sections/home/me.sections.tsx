@@ -14,9 +14,10 @@ import {
   TypescriptIcon,
 } from "@/components/icons";
 import Link from "next/link";
-import CardHome from "@/components/card/card.home";
+import CardHome from "@/components/card/home/card.home";
 import Image from "next/image";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
+import { useTranslations } from "next-intl";
 
 const container = {
   hidden: {},
@@ -44,121 +45,126 @@ const item: Variants = {
 };
 
 export const HomeSectionsMe = () => {
+  const t = useTranslations("home");
   return (
-    <TitleBlockWrapper>
-      <motion.div variants={container} initial="hidden" animate="show">
-        <div className="lg:flex lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <div className="overflow-hidden">
-              <motion.div className="flex items-center" variants={item}>
-                <span className="text-zinc-700 dark:text-zinc-400 text-2xl md:text-4xl">
-                  Hi!{" "}
-                </span>
-                <motion.img
-                  src="/waving-hand.svg"
-                  alt="waving-hand"
-                  initial={{ rotate: -30 }}
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ repeat: 2, duration: 0.5, delay: 0.1 }}
-                  // style={{ width: isMd ? 45 : 30, height: isMd ? 45 : 30 }}
-                  className="w-8 h-8 md:w-10 md:h-10"
-                />
-              </motion.div>
-            </div>
-
-            <div className="overflow-hidden mb-4">
-              <motion.div variants={item}>
-                <span className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-700 dark:text-zinc-100">
-                  I'm{" "}
-                </span>
-                <span className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary">
-                  Emane{" "}
-                </span>
-                <span className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-700 dark:text-zinc-100">
-                  Daniel,
-                </span>
-              </motion.div>
-            </div>
-
-            <motion.p
-              className="text-lg md:text-xl tracking-tight max-w-sm md:max-w-lg whitespace-pre-wrap mb-10"
-              variants={item}
-            >
-              <span className="dark:opacity-60">A </span>
-              <span className="opacity-100">full stack developer, </span>
-              <span className="dark:opacity-60">
-                passionate about IT as well as web and mobile development.
-              </span>
-            </motion.p>
-
-            <motion.div
-              className="items-center flex gap-1 mb-20 lg:mb-32"
-              variants={item}
-            >
-              <Button size="lg" className="font-bold">
-                Get in Touch
-              </Button>
-              <Button variant="ghost" size="lg" className="font-bold" asChild>
-                <Link
-                  target="_blank"
-                  href={"/cv_emane_daniel.pdf"}
-                  rel="noopener noreferrer"
-                >
-                  <FileTextIcon />
-                  RESUME
-                </Link>
-              </Button>
-            </motion.div>
-
-            <motion.div className="" variants={item}>
-              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                current stack/tools:
-              </span>
-              <div>
-                <div className="flex gap-3 mt-2 items-center">
-                  <ExpressIcon />
-                  <NestIcon />
-                  <ReactIcon />
-                  <NextIcon />
-                  <ExpoIcon />
-                  <TypescriptIcon />
-                  <TailwindIcon />
-                  <div className="w-[0.25] h-5 rounded-full bg-slate-600 dark:bg-slate-400 mx-2" />
-                  <FigmaIcon />
-                </div>
+    <div className="w-full flex justify-center">
+      <TitleBlockWrapper>
+        <motion.div variants={container} initial="hidden" animate="show">
+          <div className="lg:flex lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="overflow-hidden mb-4">
+                <motion.div className="flex items-center" variants={item}>
+                  <span className="text-zinc-700 dark:text-zinc-400 text-2xl md:text-4xl">
+                    {t("hi")}!{" "}
+                  </span>
+                  <motion.img
+                    src="/waving-hand.svg"
+                    alt="waving-hand"
+                    initial={{ rotate: -30 }}
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ repeat: 2, duration: 0.5, delay: 0.1 }}
+                    // style={{ width: isMd ? 45 : 30, height: isMd ? 45 : 30 }}
+                    className="w-8 h-8 md:w-10 md:h-10"
+                  />
+                </motion.div>
               </div>
-            </motion.div>
-          </div>
-          <Image
-            src="/kanekiken.png"
-            alt="kanekiken"
-            width={400}
-            height={400}
-            className="hidden lg:flex w-[400] h-[600] object-contain"
-            draggable={false}
-            priority
-            quality={100}
-          />
-        </div>
 
-        <div className="flex max-lg:hidden lg:flex-row gap-4">
-          <CardHome
-            icon="star"
-            title="Secure & Reliable"
-            description="Prioritizing data protection, authentication, and fault tolerance to ensure safe and steady performance."
-          />
-          <CardHome
-            icon="heart"
-            title="Scalable Architecture"
-            description="Designing systems that grow effortlessly—whether it's handling 10 or 10 million requests."
-          />
-          <CardHome
-            icon="code"
-            title="High Performance"
-            description="Optimized for speed and efficiency to deliver seamless experiences behind the scenes."
-          />
-        </div>
-      </motion.div>
-    </TitleBlockWrapper>
+              <div className="overflow-hidden mb-4">
+                <motion.div variants={item}>
+                  <span className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-700 dark:text-zinc-100">
+                    {t("i'm")}{" "}
+                  </span>
+                  <span className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary">
+                    Emane{" "}
+                  </span>
+                  <span className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-700 dark:text-zinc-100">
+                    Daniel,
+                  </span>
+                </motion.div>
+              </div>
+
+              <motion.p
+                className="text-lg md:text-xl tracking-tight max-w-sm md:max-w-lg whitespace-pre-wrap mb-10"
+                variants={item}
+              >
+                <span className="dark:opacity-60">{t("a")} </span>
+                <span className="opacity-100">
+                  {t("full_stack_developer")},{" "}
+                </span>
+                <span className="dark:opacity-60">
+                  {t("passionate_about_it")}
+                </span>
+              </motion.p>
+
+              <motion.div
+                className="items-center flex gap-1 mb-20 lg:mb-32"
+                variants={item}
+              >
+                <Button size="lg" className="font-bold">
+                  {t("contact_me")}
+                </Button>
+                <Button variant="ghost" size="lg" className="font-bold" asChild>
+                  <Link
+                    target="_blank"
+                    href={"/cv_emane_daniel.pdf"}
+                    rel="noopener noreferrer"
+                  >
+                    <FileTextIcon />
+                    {t("resume")}
+                  </Link>
+                </Button>
+              </motion.div>
+
+              <motion.div className="" variants={item}>
+                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  {t("current_stack_tools")}
+                </span>
+                <div>
+                  <div className="flex gap-3 mt-2 items-center">
+                    <ExpressIcon />
+                    <NestIcon />
+                    <ReactIcon />
+                    <NextIcon />
+                    <ExpoIcon />
+                    <TypescriptIcon />
+                    <TailwindIcon />
+                    <div className="w-[0.25] h-5 rounded-full bg-slate-600 dark:bg-slate-400 mx-2" />
+                    <FigmaIcon />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+            <Image
+              src="/kanekiken.png"
+              alt="kanekiken"
+              width={400}
+              height={400}
+              className="hidden lg:flex w-[400] h-[600] object-contain"
+              draggable={false}
+              priority
+              quality={100}
+            />
+          </div>
+
+          <div className="flex max-lg:hidden lg:flex-row gap-4">
+            <CardHome
+              icon="star"
+              title={t("secure_and_reliable")}
+              description={t("secure_and_reliable_description")}
+            />
+            <CardHome
+              icon="heart"
+              title={t("scalable_architecture")}
+              description={t("scalable_architecture_description")}
+            />
+            <CardHome
+              icon="code"
+              title={t("high_performance")}
+              description={t("high_performance_description")}
+            />
+          </div>
+        </motion.div>
+      </TitleBlockWrapper>
+    </div>
   );
 };

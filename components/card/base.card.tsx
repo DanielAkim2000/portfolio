@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { ChevronRightIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export type DevopsCardProps = {
   index: number;
@@ -32,13 +33,14 @@ export const handleClick = ({
 };
 
 export const BaseCard = (props: DevopsCardProps) => {
+  const t = useTranslations("home");
   return (
     <div
       className={`w-full border-2 p-4 flex flex-row gap-2 items-center rounded-lg bg-white dark:bg-slate-900 transition ease-in-out duration-200 ${
         props.isClicked ? "border-primary" : ""
       }`}
     >
-      <div className="hidden xl:flex w-20 items-center justify-center">
+      <div className="hidden xl:flex  min-w-24 max-w-24 items-center justify-center">
         {props.icon ? (
           <>{props.icon}</>
         ) : (
@@ -73,11 +75,13 @@ export const BaseCard = (props: DevopsCardProps) => {
             asChild
             variant="outline"
             onClick={(e) => e.stopPropagation()}
-            className="rounded-full bg-transparent border-0 text-primary font-bold hover:bg-primary/15 hover:text-primary dark:bg-transparent dark:hover:bg-primary/15 dark:hover:text-primary shadow-none transition ease-in-out duration-200"
+            className="rounded-full bg-primary/10 text-primary font-bold hover:bg-primary/25 hover:text-primary  dark:hover:bg-primary/25  dark:hover:text-primary  shadow-none transition-all ease-in-out duration-200 group"
           >
             <Link href={props.link} className="rounded-full mt-4">
-              Learn More
-              <ChevronRightIcon className="ml-2 h-4 w-4 text-primary" />
+              {t("learn_more")}
+              <ChevronRightIcon
+                className={`ml-2 h-4 w-4 text-primary transition-all ease-in-out duration-200 group-hover:translate-x-2 group-active:translate-x-1`}
+              />
             </Link>
           </Button>
         )}

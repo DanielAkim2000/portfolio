@@ -1,0 +1,58 @@
+# Front-End (HTML/CSS/JavaScript)
+
+For this KGB mission management project, I developed the user interface without using any front-end frameworks, relying solely on fundamental web technologies:
+
+- **Semantic HTML structure**: Clear content organization with appropriate HTML5 tags for better accessibility
+- **Responsive CSS layout**: Creation of an adaptive interface without depending on external libraries like Bootstrap
+- **Vanilla JavaScript**: Implementation of interactive features without frameworks
+- **Dynamic filtering**: Development of a system allowing to filter displayed missions according to different criteria
+- **Asynchronous requests**: Use of the Fetch API to communicate with the backend without page reloading
+- **Client-side validation**: Verification of form data before sending to the server
+- **Administration interface**: Separate dashboards according to users' authorization levels
+
+The most interesting part of the front-end development was creating a dynamic filtering system that allows users to quickly find missions or agents according to different criteria, all without relying on external libraries.
+
+---
+
+# Back-End (Pure PHP)
+
+For the server part, I developed an application entirely in PHP without using frameworks like Laravel or Symfony. This "from scratch" development allowed me to explore:
+
+- **Manual MVC architecture**: Creation of a Model-View-Controller structure without the help of a framework
+- **Custom routing system**: Development of a router to direct requests to the right controllers
+- **Secure session management**: Implementation of a robust authentication system
+- **Data access**: Creation of database access classes without an ORM
+- **Server-side validation**: Verification and cleaning of submitted data
+- **Class autoloading**: Manual configuration of class loading following PSR-4 standards
+- **Protection against vulnerabilities**: Security against SQL injections, XSS, and CSRF
+
+This work in pure PHP was particularly educational as it allowed me to understand the underlying mechanisms that are usually handled by frameworks, especially security, routing, and MVC structure.
+
+---
+
+# System Features
+
+This KGB mission management application includes a comprehensive set of features:
+
+## Mission Management
+
+- **Mission creation and editing**: Interface to define new missions with all their parameters
+- **Agent assignment**: System for assigning agents to missions according to their specialties
+- **Safehouse management**: Association of secure safehouses for each mission
+- **Status tracking**: Update of mission status (in preparation, in progress, completed, etc.)
+- **Operation history**: Logging of activities related to each mission
+
+## Agent Administration
+
+- **Agent profiles**: Management of personal and professional information
+- **Specialties and skills**: Cataloging of expertise and qualifications
+- **Availability**: Tracking of assignments and availability for new missions
+- **Clearance levels**: Management of access levels to classified information
+
+## Security and Access
+
+- **Differentiated access levels**: Specific rights according to the user's role
+- **Connection logging**: Tracking of activities to detect any intrusion
+- **Session expiration**: Automatic disconnection after a period of inactivity
+
+This project allowed me to gain a deep understanding of the internal workings of a web application, without the abstraction provided by frameworks. I particularly appreciated the challenge of creating a secure and functional system from scratch, which gave me a better appreciation of the services that modern frameworks offer us.

@@ -2,6 +2,8 @@
 import { motion, Variants } from "framer-motion";
 
 export type AnimatedTitleBlockProps = {
+  variant?: "primary" | "tertiary";
+  lowTitle?: string;
   title: string;
   subtitle: string;
 };
@@ -30,9 +32,20 @@ const item: Variants = {
   },
 };
 
-export const AnimatedTitleBlock = (props: AnimatedTitleBlockProps) => {
+export const AnimatedTitleBlock = ({
+  variant = "primary",
+  ...props
+}: AnimatedTitleBlockProps) => {
   return (
     <motion.div variants={container} initial="hidden" animate="show">
+      {props.lowTitle && (
+        <motion.h2
+          className={`text-2xl font-bold text-${variant}`}
+          variants={item}
+        >
+          {props.lowTitle}
+        </motion.h2>
+      )}
       <motion.h1
         className="text-[2.5rem] font-extrabold leading-tight text-slate-700 md:text-7xl md:leading-snug dark:text-slate-300"
         variants={item}
@@ -40,7 +53,7 @@ export const AnimatedTitleBlock = (props: AnimatedTitleBlockProps) => {
         {props.title}
       </motion.h1>
       <motion.p
-        className="mt-4 text-lg text-slate-600 md:mt-6 md:text-2xl lg:max-w-[500px] xl:max-w-[700px] dark:text-slate-400"
+        className="mt-4 text-xl text-slate-600 md:mt-6 md:text-2xl lg:max-w-[500px] xl:max-w-[700px] dark:text-slate-400"
         variants={item}
       >
         {props.subtitle}

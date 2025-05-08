@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  bdd:
+    image: postgres:latest
+    container_name: bdd_portfolio
+    restart: always
+    environment:
+      POSTGRES_USER: postgres_portfolio
+      POSTGRES_PASSWORD: postgres_next_js
+      POSTGRES_DB: portfolio
+    ports:
+      - 5432:5432
+    volumes:
+      - /home/nna-ekamkam/docker/pgdata:/var/lib/postgresql/data
+    networks:
+      - portfolio-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres_portfolio", "-d", "portfolio"]
+      interval: 10s
+      retries: 5
+  nextjs:
+    build: /home/nna-ekamkam/projets/portfolio_next_js
+    image: nextjs:latest
+    container_name: nextjs_portfolio
+    restart: always
+    tty: true
+    working_dir: /portfolio
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    volumes:
+      - /home/nna-ekamkam/projets/portfolio_next_js:/portfolio
+      - /portfolio/node_modules
+    networks:
+      - portfolio-network
+    depends_on:
+      - bdd
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: >
+      sh -c "pnpm prisma:migrate:prod && pnpm prisma:generate:prod && pnpm prisma:push:prod && pnpm build && pnpm start"
+
+networks:
+  portfolio-network:
+    driver: bridge

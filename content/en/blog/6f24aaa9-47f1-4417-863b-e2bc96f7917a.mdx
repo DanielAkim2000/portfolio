@@ -1,0 +1,652 @@
+# Creating a Secure REST API with NestJS, JWT and User Roles (Admin, User)
+
+Security is a fundamental aspect of modern REST API development. In this article, we'll explore how to create a secure REST API with NestJS, implementing JWT authentication and a user role system (Admin and User).
+
+## 1. Project Initialization
+
+Let's start by setting up our NestJS project. If you haven't installed the NestJS CLI yet, you can do so with the following command:
+
+```bash
+npm i -g @nestjs/cli
+```
+
+Then, let's create our project:
+
+```bash
+nest new nest-auth-api
+cd nest-auth-api
+```
+
+Let's install the necessary dependencies for our authentication system:
+
+```bash
+npm install --save @nestjs/jwt passport passport-jwt bcrypt class-validator class-transformer @nestjs/config
+npm install --save-dev @types/passport-jwt @types/bcrypt
+```
+
+These packages will allow us to:
+
+- Generate and verify JWT tokens
+- Implement authentication strategies with Passport
+- Hash passwords with bcrypt
+- Validate incoming data with class-validator
+- Manage environment variables with @nestjs/config
+
+## 2. Creating the Authentication Module
+
+### Database Configuration
+
+For this example, we'll use TypeORM with a PostgreSQL database. Let's install the necessary packages:
+
+```bash
+npm install --save @nestjs/typeorm typeorm pg
+```
+
+Let's configure our database connection in `app.module.ts`:
+
+```typescript
+// app.module.ts
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: "postgres",
+        host: configService.get("DB_HOST", "localhost"),
+        port: configService.get("DB_PORT", 5432),
+        username: configService.get("DB_USERNAME", "postgres"),
+        password: configService.get("DB_PASSWORD", "postgres"),
+        database: configService.get("DB_NAME", "nest_auth"),
+        entities: [__dirname + "/**/*.entity{.ts,.js}"],
+        synchronize: configService.get("DB_SYNC", false),
+      }),
+    }),
+    // Other modules...
+  ],
+})
+export class AppModule {}
+```
+
+Let's create a `.env` file at the root of the project:
+
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_NAME=nest_auth
+DB_SYNC=true
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRATION=3600
+```
+
+### Creating the User Entity
+
+Let's create our User entity with role support:
+
+```typescript
+// src/users/entities/user.entity.ts
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from "typeorm";
+import * as bcrypt from "bcrypt";
+
+export enum UserRole {
+  ADMIN = "admin",
+  USER = "user",
+}
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  createdAt: Date;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
+  }
+}
+```
+
+### Creating the Authentication Module
+
+Now let's create our authentication module:
+
+```bash
+nest g module auth
+nest g module users
+nest g service auth
+nest g service users
+nest g controller auth
+nest g controller users
+```
+
+Let's implement the authentication logic:
+
+```typescript
+// src/auth/auth.service.ts
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { UsersService } from "../users/users.service";
+import { LoginDto } from "./dto/login.dto";
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+  ) {}
+
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.findByEmail(email);
+    if (user && (await user.validatePassword(password))) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto;
+    const user = await this.validateUser(email, password);
+
+    if (!user) {
+      throw new UnauthorizedException("Invalid credentials");
+    }
+
+    const payload = { email: user.email, sub: user.id, role: user.role };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+    };
+  }
+}
+```
+
+Let's create a DTO for login:
+
+```typescript
+// src/auth/dto/login.dto.ts
+import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+
+export class LoginDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  @MinLength(6)
+  password: string;
+}
+```
+
+Let's create a DTO for registration:
+
+```typescript
+// src/auth/dto/register.dto.ts
+import {
+  IsEmail,
+  IsNotEmpty,
+  MinLength,
+  IsOptional,
+  IsEnum,
+} from "class-validator";
+import { UserRole } from "../../users/entities/user.entity";
+
+export class RegisterDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  @MinLength(6)
+  password: string;
+
+  @IsOptional()
+  name?: string;
+
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
+}
+```
+
+Let's implement the users service:
+
+```typescript
+// src/users/users.service.ts
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User, UserRole } from "./entities/user.entity";
+import { RegisterDto } from "../auth/dto/register.dto";
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>
+  ) {}
+
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { email } });
+  }
+
+  async findById(id: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { id } });
+  }
+
+  async create(registerDto: RegisterDto): Promise<User> {
+    const { email } = registerDto;
+    const existingUser = await this.findByEmail(email);
+
+    if (existingUser) {
+      throw new ConflictException("This email is already in use");
+    }
+
+    const user = this.usersRepository.create(registerDto);
+    return this.usersRepository.save(user);
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
+
+  async update(id: string, updateData: Partial<User>): Promise<User> {
+    const user = await this.findById(id);
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    // Prevent updating sensitive fields like password
+    delete updateData.password;
+
+    const updatedUser = { ...user, ...updateData };
+    return this.usersRepository.save(updatedUser);
+  }
+
+  async remove(id: string): Promise<void> {
+    const result = await this.usersRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException("User not found");
+    }
+  }
+}
+```
+
+## 3. Setting Up the Role System
+
+Now, let's implement our role-based access control system. First, let's create a JWT strategy:
+
+```typescript
+// src/auth/strategies/jwt.strategy.ts
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { PassportStrategy } from "@nestjs/passport";
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(private configService: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>("JWT_SECRET"),
+    });
+  }
+
+  async validate(payload: any) {
+    return { userId: payload.sub, email: payload.email, role: payload.role };
+  }
+}
+```
+
+Let's create a custom guard to check roles:
+
+```typescript
+// src/auth/guards/roles.guard.ts
+import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { UserRole } from "../../users/entities/user.entity";
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
+      "roles",
+      [context.getHandler(), context.getClass()]
+    );
+
+    if (!requiredRoles) {
+      return true;
+    }
+
+    const { user } = context.switchToHttp().getRequest();
+    return requiredRoles.some((role) => user.role === role);
+  }
+}
+```
+
+Let's create a decorator to specify required roles:
+
+```typescript
+// src/auth/decorators/roles.decorator.ts
+import { SetMetadata } from "@nestjs/common";
+import { UserRole } from "../../users/entities/user.entity";
+
+export const Roles = (...roles: UserRole[]) => SetMetadata("roles", roles);
+```
+
+Let's configure the authentication module:
+
+```typescript
+// src/auth/auth.module.ts
+import { Module } from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
+import { PassportModule } from "@nestjs/passport";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { AuthService } from "./auth.service";
+import { AuthController } from "./auth.controller";
+import { UsersModule } from "../users/users.module";
+import { JwtStrategy } from "./strategies/jwt.strategy";
+
+@Module({
+  imports: [
+    UsersModule,
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>("JWT_SECRET"),
+        signOptions: {
+          expiresIn: configService.get<string>("JWT_EXPIRATION", "1h"),
+        },
+      }),
+    }),
+  ],
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
+  exports: [AuthService],
+})
+export class AuthModule {}
+```
+
+Let's configure the users module:
+
+```typescript
+// src/users/users.module.ts
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { UsersService } from "./users.service";
+import { UsersController } from "./users.controller";
+import { User } from "./entities/user.entity";
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UsersService],
+  controllers: [UsersController],
+  exports: [UsersService],
+})
+export class UsersModule {}
+```
+
+## 4. Protected Route Examples
+
+Now, let's implement the controllers with protected routes:
+
+```typescript
+// src/auth/auth.controller.ts
+import { Controller, Post, Body, UseGuards, Get } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { AuthService } from "./auth.service";
+import { UsersService } from "../users/users.service";
+import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
+import { GetUser } from "./decorators/get-user.decorator";
+import { User } from "../users/entities/user.entity";
+
+@Controller("auth")
+export class AuthController {
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService
+  ) {}
+
+  @Post("login")
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
+  }
+
+  @Post("register")
+  async register(@Body() registerDto: RegisterDto) {
+    const user = await this.usersService.create(registerDto);
+    const { password, ...result } = user;
+    return result;
+  }
+
+  @Get("profile")
+  @UseGuards(AuthGuard("jwt"))
+  getProfile(@GetUser() user: User) {
+    return user;
+  }
+}
+```
+
+Let's create the decorator to get the current user:
+
+```typescript
+// src/auth/decorators/get-user.decorator.ts
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+
+export const GetUser = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user;
+  }
+);
+```
+
+Let's create the controller for users with role-protected routes:
+
+```typescript
+// src/users/users.controller.ts
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { UsersService } from "./users.service";
+import { User, UserRole } from "./entities/user.entity";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { Roles } from "../auth/decorators/roles.decorator";
+
+@Controller("users")
+@UseGuards(AuthGuard("jwt"), RolesGuard)
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @Roles(UserRole.ADMIN)
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Get(":id")
+  @Roles(UserRole.ADMIN)
+  findOne(@Param("id") id: string) {
+    return this.usersService.findById(id);
+  }
+
+  @Patch(":id")
+  @Roles(UserRole.ADMIN)
+  update(@Param("id") id: string, @Body() updateUserDto: Partial<User>) {
+    return this.usersService.update(id, updateUserDto);
+  }
+
+  @Delete(":id")
+  @Roles(UserRole.ADMIN)
+  remove(@Param("id") id: string) {
+    return this.usersService.remove(id);
+  }
+}
+```
+
+## 5. Bonus: Exception Handling and Global Validation
+
+Let's configure global validation in our application:
+
+```typescript
+// src/main.ts
+import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
+import { AppModule } from "./app.module";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    })
+  );
+
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+Let's create a custom exception filter:
+
+```typescript
+// src/common/filters/http-exception.filter.ts
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+} from "@nestjs/common";
+import { Request, Response } from "express";
+
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+    const status = exception.getStatus();
+    const exceptionResponse = exception.getResponse();
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message:
+        typeof exceptionResponse === "object"
+          ? (exceptionResponse as any).message
+          : exceptionResponse,
+    });
+  }
+}
+```
+
+Let's apply this filter globally:
+
+```typescript
+// src/main.ts (updated)
+import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
+import { AppModule } from "./app.module";
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    })
+  );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+## Conclusion
+
+In this article, we created a secure REST API with NestJS, implementing JWT authentication and a role-based access control system. We have:
+
+1. Configured a NestJS project with PostgreSQL database
+2. Implemented a JWT authentication system
+3. Created a role system (Admin, User)
+4. Protected routes with role-based guards
+5. Added data validation and exception handling
+
+This model can be extended to meet more complex needs, such as adding features like:
+
+- Token refresh
+- Email verification
+- Password recovery
+- Login attempt logging
+- Rate limiting to prevent brute force attacks
+
+The complete code is available on [GitHub](https://github.com/example/nestjs-auth-roles-api).

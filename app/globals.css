@@ -33,6 +33,9 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-foreground: var(--tertiary-foreground);
+  --color-background-tertiary: var(--background-tertiary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -76,6 +79,9 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.606 0.25 292.717);
+  --tertiary: oklch(0.6 0.15 240);
+  --tertiary-foreground: oklch(0.969 0.016 293.756);
+  --background-tertiary: oklch(0.75 0 0 / 66.22%);
 }
 
 .dark {
@@ -110,6 +116,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.541 0.281 293.009);
+  --tertiary: oklch(0.6 0.15 240);
+  --tertiary-foreground: oklch(0.969 0.016 293.756);
+  --background-tertiary: oklch(0.2 0.06 240);
 }
 
 @layer base {
@@ -127,4 +136,29 @@ button {
 
 ::selection {
   @apply bg-primary/50 text-primary-foreground;
+}
+
+.background-tertiary-blur {
+  background-color: var(--background-tertiary);
+  backdrop-filter: blur(1000px);
+  -webkit-backdrop-filter: blur(1000px);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+.blur-background {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.theme-blur {
+  @apply bg-white/50 dark:bg-slate-900/50;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px) !important;
 }

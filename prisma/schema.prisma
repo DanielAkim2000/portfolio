@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Title {
+  id          String   @id @default(uuid())
+  locale      String
+  title       String
+  subtitle    String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  projectId   String?
+  Project     Project? @relation(fields: [projectId], references: [id])
+  Blog        Blog?    @relation(fields: [blogId], references: [id])
+  blogId      String?
+  Til         Til?     @relation(fields: [tilId], references: [id])
+  tilId       String?
+
+  @@unique([projectId, locale])
+}
+
+enum ReactionType {
+  CLAPPING
+  THINKING
+  AMAZED
+}
+
+model Reaction {
+  id        String       @id @default(uuid())
+  type      ReactionType
+  sessionId String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  Project   Project?     @relation(fields: [projectId], references: [id])
+  projectId String?
+  Blog      Blog?        @relation(fields: [blogId], references: [id])
+  blogId    String?
+
+  @@unique([sessionId, type, projectId])
+  @@unique([sessionId, type, blogId])
+}
+
+model Content {
+  id        String   @id @default(uuid())
+  locale    String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Til       Til?     @relation(fields: [tilId], references: [id])
+  tilId     String?
+  Project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+
+  @@unique([tilId, locale])
+}
+
+model Project {
+  id          String     @id @default(uuid())
+  title       Title[]
+  link        String?
+  githubLink  String[]
+  images      String[]
+  description Content[]
+  nbShares    Int        @default(0)
+  views       Int        @default(0)
+  reactions   Reaction[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Blog {
+  id        String     @id @default(uuid())
+  title     Title[]
+  reactions Reaction[]
+  images    String[]
+  views     Int        @default(0)
+  nbShares  Int        @default(0)
+  pinned    Boolean    @default(false)
+  location  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([pinned(sort: Desc)])
+}
+
+model Til {
+  id             String    @id @default(uuid())
+  date           DateTime  @default(now())
+  title          Title[]
+  tags           String[]
+  linkDoc        String?
+  additionalInfo Content[]
+  language       String    @default("ts")
+  code           String    @db.Text
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}

@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Blog" ADD COLUMN     "nbShares" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "views" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN     "githubLink" TEXT[],
+ADD COLUMN     "views" INTEGER NOT NULL DEFAULT 0;

@@ -2,25 +2,31 @@
 
 import { TitleBlock } from "@/components/block/title.block";
 import { BaseCard, handleClick } from "@/components/card/base.card";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 const SectionCardDevOps1 = () => {
+  const t = useTranslations("home");
   const [isClicked, setIsClicked] = useState([false, false, false, false]);
 
   return (
     <div className="flex-1">
       <div className="px-6 md:px-12 ml-auto mr-auto max-w-[75rem] mb-6">
         <TitleBlock
-          title="Backend (Secure & performant)"
-          subtitle="Resilient, Modular & High-Performance Architecture."
-          description="Build robust systems with clean logic, optimized for speed, scalability, and security."
+          title={t("backend")}
+          subtitle={t("resilient_modular_high_performance_architecture")}
+          description={t(
+            "build_robust_systems_with_clean_logic_optimized_for_speed_scalability_and_security"
+          )}
         />
       </div>
       <div className="flex flex-col gap-4 mb-6">
         <BaseCard
           index={0}
-          title="Architecture"
-          description="Modular, layered architecture ensuring maintainability and reusability."
+          title={t("architecture")}
+          description={t(
+            "modular_layered_architecture_ensuring_maintainability_and_reusability"
+          )}
           isClicked={isClicked[0]}
           setIsClicked={() =>
             handleClick({
@@ -32,8 +38,10 @@ const SectionCardDevOps1 = () => {
         />
         <BaseCard
           index={1}
-          title="Data Flow"
-          description="Efficient API and database interaction with clean request/response handling."
+          title={t("data_flow")}
+          description={t(
+            "efficient_api_and_database_interaction_with_clean_request_response_handling"
+          )}
           isClicked={isClicked[1]}
           setIsClicked={() =>
             handleClick({
@@ -45,8 +53,10 @@ const SectionCardDevOps1 = () => {
         />
         <BaseCard
           index={2}
-          title="Security"
-          description="Input validation, encryption, and auth protocols to protect data and services."
+          title={t("security")}
+          description={t(
+            "input_validation_encryption_and_auth_protocols_to_protect_data_and_services"
+          )}
           isClicked={isClicked[2]}
           setIsClicked={() =>
             handleClick({
@@ -58,8 +68,10 @@ const SectionCardDevOps1 = () => {
         />
         <BaseCard
           index={3}
-          title="Performance"
-          description="Optimized queries, caching, and async processes for lightning-fast execution."
+          title={t("performance")}
+          description={t(
+            "optimized_queries_caching_and_async_processes_for_lightning_fast_execution"
+          )}
           isClicked={isClicked[3]}
           setIsClicked={() =>
             handleClick({
@@ -75,6 +87,7 @@ const SectionCardDevOps1 = () => {
 };
 
 const SectionCardDevOps2 = () => {
+  const t = useTranslations("home");
   const [isClicked, setIsClicked] = useState([false, false, false, false]);
 
   return (
@@ -89,8 +102,10 @@ const SectionCardDevOps2 = () => {
       <div className="flex flex-col gap-4 mb-6">
         <BaseCard
           index={0}
-          title="Infrastructure as Code"
-          description="Declarative configurations using tools like Terraform or CloudFormation."
+          title={t("infrastructure_as_code")}
+          description={t(
+            "declarative_configurations_using_tools_like_terraform_or_cloudformation"
+          )}
           isClicked={isClicked[0]}
           setIsClicked={() =>
             handleClick({
@@ -102,8 +117,10 @@ const SectionCardDevOps2 = () => {
         />
         <BaseCard
           index={1}
-          title="CI/CD Pipelines"
-          description="Automated testing, build, and deployment for rapid delivery cycles."
+          title={t("ci_cd_pipelines")}
+          description={t(
+            "automated_testing_build_and_deployment_for_rapid_delivery_cycles"
+          )}
           isClicked={isClicked[1]}
           setIsClicked={() =>
             handleClick({
@@ -115,8 +132,10 @@ const SectionCardDevOps2 = () => {
         />
         <BaseCard
           index={2}
-          title="Monitoring"
-          description="Logging, alerting, and metrics tracking for system reliability."
+          title={t("monitoring")}
+          description={t(
+            "logging_alerting_and_metrics_tracking_for_system_reliability"
+          )}
           isClicked={isClicked[2]}
           setIsClicked={() =>
             handleClick({
@@ -128,8 +147,10 @@ const SectionCardDevOps2 = () => {
         />
         <BaseCard
           index={3}
-          title="Scalability"
-          description="Cloud-native tools and container orchestration for on-demand scaling."
+          title={t("scalability")}
+          description={t(
+            "cloud_native_tools_and_container_orchestration_for_on_demand_scaling"
+          )}
           isClicked={isClicked[3]}
           setIsClicked={() =>
             handleClick({

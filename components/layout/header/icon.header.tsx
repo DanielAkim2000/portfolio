@@ -1,23 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 
-export type IconHeaderProps = {};
-
-export const IconHeader = (props: IconHeaderProps) => {
+export const IconHeader = () => {
   const pathname = usePathname();
   return (
-    <Link href="/" className="flex items-center">
+    <Link href={`/`} className="flex items-center">
       <div className="flex items-center text-xl">
         <div
           className={`${
-            pathname === "/" ? "bg-primary" : "bg-transparent"
-          }  border-2 sm:h-7 sm:w-7 h-8 w-8 border-primary items-center justify-center flex rounded-[10]`}
+            pathname === `/` ? "bg-primary" : "bg-transparent"
+          }  border-2 lg:border-[2.5px] sm:h-7 sm:w-7 h-8 w-8 border-primary items-center justify-center flex rounded-[10]`}
         >
           <div
             className={`
-              ${pathname === "/" ? "bg-white" : "bg-primary"} 
+              ${pathname === `/` ? "bg-white" : "bg-primary"} 
               h-3.5 w-0.5 rotate-12 rounded-full sm:h-3 sm:w-0.5 `}
           />
         </div>

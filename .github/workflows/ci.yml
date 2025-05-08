@@ -1,0 +1,27 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Agent Ssh
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Copy files to server
+        run: |
+          ssh -o StrictHostKeyChecking=no -p 2222 nna-ekamkam@86.196.4.160 << 'EOF'
+            cd /home/nna-ekamkam/projets/portfolio
+            git pull origin main
+            docker-compose down
+            docker-compose up -d --build
+          EOF

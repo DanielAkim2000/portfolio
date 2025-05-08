@@ -5,12 +5,16 @@ import { ChartNoAxesColumn, ChevronRight, DotIcon, Pin } from "lucide-react";
 import Link from "next/link";
 import CountUp from "react-countup";
 import { motion } from "framer-motion";
+import { useLocale } from "next-intl";
+import { Blog, Title } from "@/prisma/generated";
 
-export type SectionPostsProps = {};
+export type SectionPostsProps = {
+  blogs: (Blog & { title: Title[] })[];
+};
 
 const CardPinnedPost = (post: Post) => {
   return (
-    <div className="relative overflow-hidden rounded-lg sm:border flex-1">
+    <div className="relative overflow-hidden sm:rounded-lg sm:border flex-1">
       <motion.div
         initial={{ x: "-200%" }}
         animate={{ x: "300%", opacity: 0 }}
@@ -33,14 +37,13 @@ const CardPost = (post: Post) => {
 
 const BaseCardPost = (post: Post) => {
   const { title, description, date, views, shares, location } = post;
-  const dateFormatted = new Date(date).toLocaleDateString("fr-FR", {
+  const locale = useLocale();
+  const dateFormatted = new Date(date).toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-  const locationFormatted =
-    location.charAt(0).toUpperCase() + location.slice(1);
-  const dateString = `${dateFormatted} - ${locationFormatted}`;
+  const dateString = `${dateFormatted}`;
 
   const descriptionString =
     description.length > 100 ? `${description.slice(0, 100)}...` : description;
@@ -53,18 +56,18 @@ const BaseCardPost = (post: Post) => {
         {post.pinned ? (
           <div className="flex items-center gap-2 text-slate-500 dark:text-primary">
             <Pin />
-            <span className=" text-lg font-semibold">Pinned Post</span>
+            <span className=" text-xl font-semibold">Pinned Post</span>
           </div>
         ) : null}
-        <div className="mt-2 items-center flex gap-1 text-slate mb-2  text-xs text-slate-500 dark:text-slate-400 md:mb-1">
+        <div className="mt-2 items-center flex gap-1 text-slate mb-2  text-sm text-slate-500 dark:text-slate-400 md:mb-1">
           <span>{dateString}</span>
           <DotIcon />
           <span>{locationString}</span>
         </div>
-        <h3 className="text-2xl font-extrabold text-slate-700 dark:text-slate-300">
+        <h3 className="text-3xl font-extrabold text-slate-700 dark:text-slate-300 my-2">
           {titleString}
         </h3>
-        <p className="text-md text-slate-600 dark:text-slate-400">
+        <p className="text-lg text-slate-600 dark:text-slate-400">
           {descriptionString}
         </p>
         <div className="flex items-center gap-2 mt-2 mb-2 text-slate-600 dark:text-slate-400 text-xs">
@@ -93,7 +96,7 @@ const BaseCardPost = (post: Post) => {
         </div>
         <Button
           variant="outline"
-          className={`text-primary mt-2 text-xs font-bold hover:text-primary ${
+          className={`text-primary mt-2 text-sm font-bold hover:text-primary ${
             post.pinned ? "sm:hidden" : ""
           }`}
           size="sm"
@@ -120,53 +123,25 @@ interface Post {
   location: string;
 }
 
-const Posts: Post[] = [
-  {
-    id: "1",
-    title: "Post 1",
-    description: "Description 1",
-    date: "2023-10-01",
-    views: 100,
-    shares: 10,
-    pinned: true,
-    location: "France",
-  },
-  {
-    id: "2",
-    title: "Post 2",
-    description: "Description 2",
-    date: "2023-10-02",
-    views: 200,
-    shares: 20,
-    pinned: false,
-    location: "France",
-  },
-  {
-    id: "3",
-    title: "Post 3",
-    description: "Description 3",
-    date: "2023-10-03",
-    views: 300,
-    shares: 30,
-    pinned: false,
-    location: "France",
-  },
-  {
-    id: "4",
-    title: "Post 4",
-    description: "Description 4",
-    date: "2023-10-04",
-    views: 400,
-    shares: 40,
-    pinned: false,
-    location: "France",
-  },
-];
-
 export const SectionPosts = (props: SectionPostsProps) => {
+  const { blogs } = props;
+  const locale = useLocale();
+  const posts = blogs.map((blog) => {
+    return {
+      id: blog.id,
+      title: blog.title.find((t) => t.locale === locale)?.title || "",
+      description:
+        blog.title.find((t) => t.locale === locale)?.description || "",
+      date: new Date(blog.createdAt).toISOString(),
+      views: blog.views,
+      shares: blog.nbShares,
+      pinned: blog.pinned,
+      location: blog.location,
+    };
+  });
   return (
     <section className="mt-10  sm:px-5  flex flex-col md:w-4/6 md:ml-auto gap-2 sm:gap-4">
-      {Posts.map((post) => {
+      {posts.map((post) => {
         return post.pinned ? (
           <CardPinnedPost key={post.id} {...post} />
         ) : (

@@ -1,0 +1,58 @@
+# Front-End (HTML/CSS/JavaScript)
+
+Pour ce projet de gestion des missions du KGB, j'ai développé l'interface utilisateur sans utiliser de frameworks front-end, uniquement avec les technologies web fondamentales :
+
+- **Structure HTML sémantique** : Organisation claire du contenu avec des balises HTML5 appropriées pour une meilleure accessibilité
+- **Mise en page CSS responsive** : Création d'une interface adaptative sans dépendre de bibliothèques externes comme Bootstrap
+- **JavaScript vanilla** : Implémentation de fonctionnalités interactives sans frameworks
+- **Filtrage dynamique** : Développement d'un système permettant de filtrer les missions affichées selon différents critères
+- **Requêtes asynchrones** : Utilisation de Fetch API pour communiquer avec le backend sans rechargement de page
+- **Validation côté client** : Vérification des données de formulaires avant envoi au serveur
+- **Interface d'administration** : Tableaux de bord distincts selon les niveaux d'autorisation des utilisateurs
+
+La partie la plus intéressante du développement front-end a été la création d'un système de filtrage dynamique qui permet aux utilisateurs de retrouver rapidement les missions ou agents selon différents critères, le tout sans dépendre de bibliothèques externes.
+
+---
+
+# Back-End (PHP pur)
+
+Pour la partie serveur, j'ai développé une application entièrement en PHP sans utiliser de frameworks comme Laravel ou Symfony. Ce développement "from scratch" m'a permis d'explorer :
+
+- **Architecture MVC manuelle** : Création d'une structure Modèle-Vue-Contrôleur sans l'aide d'un framework
+- **Système de routage personnalisé** : Développement d'un routeur pour diriger les requêtes vers les bons contrôleurs
+- **Gestion de sessions sécurisée** : Implémentation d'un système d'authentification robuste
+- **Accès aux données** : Création de classes d'accès à la base de données sans ORM
+- **Validation côté serveur** : Vérification et nettoyage des données soumises
+- **Autoloading de classes** : Configuration manuelle du chargement des classes en suivant les standards PSR-4
+- **Protection contre les vulnérabilités** : Sécurisation contre les injections SQL, XSS et CSRF
+
+Ce travail en PHP pur a été particulièrement formateur car il m'a permis de comprendre les mécanismes sous-jacents qui sont habituellement gérés par les frameworks, notamment la sécurité, le routage et la structure MVC.
+
+---
+
+# Fonctionnalités du système
+
+Cette application de gestion des missions du KGB comprend un ensemble complet de fonctionnalités :
+
+## Gestion des missions
+
+- **Création et édition de missions** : Interface pour définir les nouvelles missions avec tous leurs paramètres
+- **Attribution d'agents** : Système d'affectation des agents aux missions selon leurs spécialités
+- **Gestion des planques** : Association de planques sécurisées pour chaque mission
+- **Suivi d'état** : Mise à jour du statut des missions (en préparation, en cours, terminée, etc.)
+- **Historique des opérations** : Journalisation des activités liées à chaque mission
+
+## Administration des agents
+
+- **Profils d'agents** : Gestion des informations personnelles et professionnelles
+- **Spécialités et compétences** : Catalogage des expertises et qualifications
+- **Disponibilité** : Suivi des assignations et de la disponibilité pour de nouvelles missions
+- **Niveaux d'habilitation** : Gestion des niveaux d'accès aux informations classifiées
+
+## Sécurité et accès
+
+- **Niveaux d'accès différenciés** : Droits spécifiques selon le rôle de l'utilisateur
+- **Journalisation des connexions** : Suivi des activités pour détecter toute intrusion
+- **Expiration de session** : Déconnexion automatique après une période d'inactivité
+
+Ce projet m'a permis d'acquérir une compréhension approfondie du fonctionnement interne d'une application web, sans l'abstraction fournie par les frameworks. J'ai particulièrement apprécié le défi de créer un système sécurisé et fonctionnel en partant de zéro, ce qui m'a donné une meilleure appréciation des services que les frameworks modernes nous offrent.

@@ -1,15 +1,15 @@
 import { useSettings } from "@/zustand/settings.store";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-export type FocusModeToggleProps = {};
-
-export const FocusModeToggle = (props: FocusModeToggleProps) => {
+export const FocusModeToggle = () => {
+  const t = useTranslations("header");
   const { focusMode, setFocusMode } = useSettings();
 
   return (
     <button
-      className={`flex-1 bg-secondary rounded-md p-4 flex flex-col items-start cursor-pointer ${
+      className={`flex-1 theme-blur rounded-md p-4 flex flex-col items-start cursor-pointer ${
         focusMode ? "opacity-100" : "opacity-50"
       }`}
       onClick={() => {
@@ -19,9 +19,9 @@ export const FocusModeToggle = (props: FocusModeToggleProps) => {
             Focus mode is now {!focusMode ? "on" : "off"}
           </span>,
           {
-            description: `Focus helps reduce distractions by hiding floating components, like navigation and reactions`,
+            description: t("focus_mode_description"),
             classNames: {
-              title: "text-red-500 text-sm font-semibold",
+              title: "text-sm font-semibold",
               icon: "self-start",
             },
           }
@@ -34,8 +34,8 @@ export const FocusModeToggle = (props: FocusModeToggleProps) => {
         <EyeOffIcon className="w-6 h-6" />
       )}
       <div className="mt-7">
-        <span className="text-sm">Focus: </span>
-        <span className="text-sm">{focusMode ? "On" : "Off"}</span>
+        <span className="text-sm">{t("focus")}: </span>
+        <span className="text-sm">{focusMode ? t("on") : t("off")}</span>
       </div>
     </button>
   );

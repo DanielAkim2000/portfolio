@@ -1,0 +1,757 @@
+# Creating a Protected User Profile Page with Authentication in Next.js (App Router + Middleware + API Route)
+
+Authentication and route protection are fundamental aspects of any modern application. In this article, we'll explore how to create a fully protected user profile page in a Next.js application using App Router, Middleware, and API Routes.
+
+## Understanding the Basics of Authentication in Next.js
+
+Before we start, let's clarify some essential concepts:
+
+- **App Router**: The new routing system introduced in Next.js 13+ that allows folder-based route organization.
+- **Middleware**: A way to intercept requests before they reach the page.
+- **API Routes**: Server endpoints to handle database-related operations.
+
+## Project Setup
+
+Let's start by setting up our Next.js project:
+
+```bash
+npx create-next-app@latest profile-auth-app
+cd profile-auth-app
+npm install next-auth@latest bcrypt jsonwebtoken
+```
+
+## File Structure
+
+Here's the file structure we'll be creating:
+
+```
+app/
+  api/
+    auth/
+      [...nextauth]/
+        route.ts
+    user/
+      profile/
+        route.ts
+      register/
+        route.ts
+  profile/
+    page.tsx
+  auth/
+    signin/
+      page.tsx
+    register/
+      page.tsx
+middleware.ts
+lib/
+  auth.ts
+  db.ts
+components/
+  ProfileForm.tsx
+  AuthForm.tsx
+  ProtectedRoute.tsx
+```
+
+## Database Configuration
+
+For this example, we'll use Prisma with a PostgreSQL database:
+
+```tsx
+// lib/db.ts
+import { PrismaClient } from "@prisma/client";
+
+let prisma: PrismaClient;
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient();
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+  prisma = global.prisma;
+}
+
+export default prisma;
+```
+
+## User Model
+
+Let's create a simple user model with Prisma:
+
+```prisma
+// prisma/schema.prisma
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  password       String
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+```
+
+## NextAuth.js Configuration
+
+```tsx
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import prisma from "@/lib/db";
+import { compare } from "bcrypt";
+
+export const authOptions = {
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          return null;
+        }
+
+        const isPasswordValid = await compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isPasswordValid) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/auth/signin",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
+```
+
+## Creating the Authentication Middleware
+
+The middleware is essential for checking authentication before accessing protected routes:
+
+```tsx
+// middleware.ts
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function middleware(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+
+  // Define public and protected paths
+  const isPublicPath = path === "/auth/signin" || path === "/auth/register";
+  const isProtectedPath = path.startsWith("/profile");
+
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  // Redirect to login page if user tries to access a protected route without being authenticated
+  if (isProtectedPath && !token) {
+    return NextResponse.redirect(new URL("/auth/signin", req.url));
+  }
+
+  // Redirect to profile if user is already logged in and tries to access login page
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL("/profile", req.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/profile/:path*", "/auth/:path*"],
+};
+```
+
+## Creating the Protected Profile Page
+
+```tsx
+// app/profile/page.tsx
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import ProfileForm from "@/components/ProfileForm";
+
+export default function ProfilePage() {
+  const { data: session, status } = useSession();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.id) {
+      // Fetch profile data
+      fetch(`/api/user/profile?userId=${session.user.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUserData(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching profile:", error);
+          setLoading(false);
+        });
+    } else if (status === "unauthenticated") {
+      redirect("/auth/signin");
+    }
+  }, [session, status]);
+
+  if (status === "loading" || loading) {
+    return <div className="container mx-auto p-6">Loading...</div>;
+  }
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Your Profile</h1>
+
+      {userData ? (
+        <ProfileForm initialData={userData} userId={session.user.id} />
+      ) : (
+        <p>Unable to load your profile information.</p>
+      )}
+    </div>
+  );
+}
+```
+
+## API for Fetching and Updating Profile
+
+```tsx
+// app/api/user/profile/route.ts
+import { getServerSession } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/db";
+import { authOptions } from "../../auth/[...nextauth]/route";
+
+export async function GET(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = request.nextUrl.searchParams.get("userId");
+
+  // Additional security check: user can only access their own profile
+  if (userId !== session.user.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        // Don't select password for security reasons
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const { userId, name, image } = body;
+
+  // Security check: user can only update their own profile
+  if (userId !== session.user.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name,
+        image,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+      },
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+```
+
+## Profile Form Component
+
+```tsx
+// components/ProfileForm.tsx
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function ProfileForm({ initialData, userId }) {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: initialData.name || "",
+    image: initialData.image || "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          ...formData,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "An error occurred");
+      }
+
+      setSuccess("Profile updated successfully!");
+      router.refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+      {error && (
+        <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>
+      )}
+      {success && (
+        <div className="bg-green-100 text-green-700 p-3 rounded mb-4">
+          {success}
+        </div>
+      )}
+
+      <div className="mb-4">
+        <label htmlFor="name" className="block mb-2 text-sm font-medium">
+          Full Name
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="image" className="block mb-2 text-sm font-medium">
+          Profile Image URL
+        </label>
+        <input
+          type="url"
+          id="image"
+          name="image"
+          value={formData.image}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+        {formData.image && (
+          <div className="mt-2">
+            <img
+              src={formData.image}
+              alt="Profile image preview"
+              className="w-20 h-20 object-cover rounded-full"
+            />
+          </div>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+      >
+        {isSubmitting ? "Saving..." : "Save Changes"}
+      </button>
+    </form>
+  );
+}
+```
+
+## Authentication Form
+
+```tsx
+// components/AuthForm.tsx
+"use client";
+
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+export default function AuthForm({ mode = "signin" }) {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
+    // Simple validation
+    if (mode === "register" && formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      if (mode === "register") {
+        // Registration
+        const response = await fetch("/api/user/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Registration failed");
+        }
+
+        // Auto sign in after registration
+        await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        });
+
+        router.push("/profile");
+      } else {
+        // Sign in
+        const result = await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        });
+
+        if (result.error) {
+          throw new Error("Invalid credentials");
+        }
+
+        router.push("/profile");
+      }
+    } catch (err) {
+      setError(err.message);
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+      {error && (
+        <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>
+      )}
+
+      {mode === "register" && (
+        <div className="mb-4">
+          <label htmlFor="name" className="block mb-2 text-sm font-medium">
+            Full Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+      )}
+
+      <div className="mb-4">
+        <label htmlFor="email" className="block mb-2 text-sm font-medium">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="password" className="block mb-2 text-sm font-medium">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
+      {mode === "register" && (
+        <div className="mb-4">
+          <label
+            htmlFor="confirmPassword"
+            className="block mb-2 text-sm font-medium"
+          >
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+      >
+        {isSubmitting
+          ? mode === "register"
+            ? "Registering..."
+            : "Signing in..."
+          : mode === "register"
+          ? "Register"
+          : "Sign in"}
+      </button>
+
+      <div className="mt-4 text-center">
+        {mode === "register" ? (
+          <p>
+            Already have an account?{" "}
+            <Link href="/auth/signin" className="text-blue-600 hover:underline">
+              Sign in
+            </Link>
+          </p>
+        ) : (
+          <p>
+            Don't have an account?{" "}
+            <Link
+              href="/auth/register"
+              className="text-blue-600 hover:underline"
+            >
+              Register
+            </Link>
+          </p>
+        )}
+      </div>
+    </form>
+  );
+}
+```
+
+## Authentication Pages
+
+```tsx
+// app/auth/signin/page.tsx
+import AuthForm from "@/components/AuthForm";
+
+export default function SignInPage() {
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6 text-center">Sign In</h1>
+      <AuthForm mode="signin" />
+    </div>
+  );
+}
+
+// app/auth/register/page.tsx
+import AuthForm from "@/components/AuthForm";
+
+export default function RegisterPage() {
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+      <AuthForm mode="register" />
+    </div>
+  );
+}
+```
+
+## User Registration API
+
+```tsx
+// app/api/user/register/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/db";
+import { hash } from "bcrypt";
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { name, email, password } = body;
+
+    // Basic validation
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Email and password required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "Email already in use" },
+        { status: 400 }
+      );
+    }
+
+    // Hash password
+    const hashedPassword = await hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    // Return user without password
+    const { password: _, ...userWithoutPassword } = user;
+    return NextResponse.json(userWithoutPassword);
+  } catch (error) {
+    console.error("Registration error:", error);
+    return NextResponse.json(
+      { error: "Error during registration" },
+      { status: 500 }
+    );
+  }
+}
+```
+
+## Conclusion
+
+In this article, we've created a complete Next.js application with a protected user profile page. We've used:
+
+- **Next.js App Router** to organize our routes
+- **NextAuth.js** for authentication
+- **Middleware** to protect our routes
+- **API Routes** to handle user data
+- **Prisma** to interact with the database
+
+This architecture is robust, secure, and scalable. You can customize it further by adding features like email verification, password reset, or two-factor authentication.
+
+The complete code is available on [GitHub](https://github.com/example/nextjs-protected-profile) for reference.

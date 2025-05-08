@@ -6,9 +6,12 @@ import { HeaderLink } from "./link.header";
 import { HeaderSheet } from "./sheet-actions";
 import { HeaderWorkMenu } from "./work-menu.header";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import ChangeLangueDropdown from "./change-langue-dropdown";
 
 const Header = () => {
   const { focusMode } = useSettings();
+  const t = useTranslations("header");
 
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef(null);
@@ -35,14 +38,14 @@ const Header = () => {
       },
       { threshold: 0.1 }
     );
-
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
+    const currentSentinelRef = sentinelRef.current;
+    if (currentSentinelRef) {
+      observer.observe(currentSentinelRef);
     }
 
     return () => {
-      if (sentinelRef.current) {
-        observer.unobserve(sentinelRef.current);
+      if (currentSentinelRef) {
+        observer.unobserve(currentSentinelRef);
       }
     };
   }, []);
@@ -55,9 +58,14 @@ const Header = () => {
       <nav
         className={`py-4 px-4 pt-4 flex items-center ${
           !focusMode && "sticky top-0 z-50"
-        } bg-white dark:bg-black ${
-          isSticky && !focusMode ? "border-b bg-background" : ""
+        }  ${
+          isSticky && !focusMode
+            ? "border-b bg-white/70 dark:bg-slate-900/80"
+            : "bg-white dark:bg-black"
         }`}
+        style={{
+          backdropFilter: isSticky && !focusMode ? "blur(10px)" : "none",
+        }}
       >
         <div className="max-w-[120rem] w-full mx-auto flex justify-between items-center">
           <ul className={`flex items-center gap-4 `}>
@@ -65,19 +73,22 @@ const Header = () => {
               <IconHeader />
             </li>
             <li>
-              <HeaderLink text="Projects" href="/projects" />
+              <HeaderLink text={t("projects")} href="/projects" />
             </li>
             <li>
-              <HeaderLink text="Blog" href="/blog" />
+              <HeaderLink text={t("blog")} href="/blog" />
             </li>
             <li>
-              <HeaderLink text="T.I.L" href="/til" />
+              <HeaderLink text={t("til")} href="/til" />
             </li>
             <li>
               <HeaderWorkMenu />
             </li>
           </ul>
-          <HeaderSheet />
+          <div className="flex items-center gap-2">
+            <ChangeLangueDropdown />
+            <HeaderSheet />
+          </div>
         </div>
       </nav>
     </>

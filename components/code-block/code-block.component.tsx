@@ -15,13 +15,7 @@ interface CodeBlockProps {
   readonly highlightLines?: readonly number[];
 }
 
-export function CodeBlock({
-  code,
-  language,
-  showLineNumbers = true,
-  className,
-  highlightLines = [],
-}: CodeBlockProps) {
+export function CodeBlock({ code, language, className }: CodeBlockProps) {
   const resolvedTheme = useCurrentTheme();
   const isDark = resolvedTheme === "dark";
   const [isCopied, setIsCopied] = useState(false);
@@ -39,7 +33,7 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        "relative rounded-md overflow-hidden shadow-sm w-full",
+        "relative rounded-md overflow-hidden shadow-sm flex flex-col w-full",
         className
       )}
     >
@@ -78,16 +72,21 @@ export function CodeBlock({
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre
-            className={cn(
-              className,
-              "text-sm p-4 overflow-x-auto whitespace-pre-wrap"
-            )}
-            style={style}
+            className={cn(className, "text-sm p-4 overflow-x-auto w-full")}
+            style={{
+              ...style,
+              maxWidth: "100%",
+              overflowWrap: "normal",
+            }}
           >
             {tokens.map((line, i) => {
               const { key, ...lineProps } = getLineProps({ line, key: i });
               return (
-                <div key={key as React.Key} {...lineProps}>
+                <div
+                  key={key as React.Key}
+                  {...lineProps}
+                  className="whitespace-pre"
+                >
                   {line.map((token, tokenKey) => {
                     const { key: tokenKeyProp, ...tokenProps } = getTokenProps({
                       token,

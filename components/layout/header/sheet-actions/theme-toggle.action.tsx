@@ -5,8 +5,10 @@ import { MoonStarIcon, SunIcon } from "lucide-react";
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
 import { useTheme } from "next-themes";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export default function ThemeToggle() {
+  const t = useTranslations("header");
   const theme = useCurrentTheme();
   const { setTheme } = useTheme();
   const isDark = theme === "dark";
@@ -17,9 +19,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className={`flex-1 bg-secondary rounded-md p-4 flex flex-col items-start ${
-        isDark ? "opacity-100" : "opacity-50"
-      }`}
+      className="flex-1 theme-blur rounded-md p-4 flex flex-col items-start opacity-50 dark:opacity-100"
     >
       <motion.div className="relative w-6 h-6 cursor-pointer flex items-center justify-center">
         <AnimatePresence mode="wait">
@@ -49,8 +49,10 @@ export default function ThemeToggle() {
         </AnimatePresence>
       </motion.div>
       <div className="mt-7">
-        <span className="text-sm">Dark Mode: </span>
-        <span className="text-sm">{theme === "light" ? "Off" : "On"}</span>
+        <span className="text-sm">{t("dark_mode")}: </span>
+        <span className="text-sm">
+          {theme === "light" ? t("off") : t("on")}
+        </span>
       </div>
     </button>
   );
