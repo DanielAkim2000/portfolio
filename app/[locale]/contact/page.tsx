@@ -136,12 +136,12 @@ export default async function ContactPage() {
                   item: "LinkedIn",
                   detail: (
                     <a
-                      href="https://www.linkedin.com/in/akim-emane/"
+                      href="http://linkedin.com/in/daniel-akim-emane-ab5700286"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-tertiary hover:text-tertiary/80"
                     >
-                      linkedin.com/in/akim-emane
+                      linkedin.com/in/daniel-akim-emane-ab5700286
                       <LinkIcon size={18} />
                     </a>
                   ),
@@ -150,26 +150,12 @@ export default async function ContactPage() {
                   item: "GitHub",
                   detail: (
                     <a
-                      href="https://github/github.com/akimemane"
+                      href="https://github.com/DanielAkim2000"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-tertiary hover:text-tertiary/80"
                     >
-                      github.com/akimemane
-                      <LinkIcon size={18} />
-                    </a>
-                  ),
-                },
-                {
-                  item: "Twitter",
-                  detail: (
-                    <a
-                      href="https://twitter.com/akimemane"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-tertiary hover:text-tertiary/80"
-                    >
-                      twitter.com/akimemane
+                      github.com/DanielAkim2000
                       <LinkIcon size={18} />
                     </a>
                   ),
@@ -178,12 +164,12 @@ export default async function ContactPage() {
                   item: "Instagram",
                   detail: (
                     <a
-                      href="https://www.instagram.com/akimemane/"
+                      href="https://www.instagram.com/akim_emane"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-tertiary hover:text-tertiary/80"
                     >
-                      instagram.com/akimemane
+                      instagram.com/akim_emane
                       <LinkIcon size={18} />
                     </a>
                   ),

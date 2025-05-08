@@ -47,7 +47,7 @@ const item: Variants = {
 export const HomeSectionsMe = () => {
   const t = useTranslations("home");
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex lg:justify-center">
       <TitleBlockWrapper>
         <motion.div variants={container} initial="hidden" animate="show">
           <div className="lg:flex lg:flex-row lg:items-center lg:justify-between">
@@ -100,8 +100,8 @@ export const HomeSectionsMe = () => {
                 className="items-center flex gap-1 mb-20 lg:mb-32"
                 variants={item}
               >
-                <Button size="lg" className="font-bold">
-                  {t("contact_me")}
+                <Button size="lg" className="font-bold" asChild>
+                  <Link href="/contact">{t("contact_me")}</Link>
                 </Button>
                 <Button variant="ghost" size="lg" className="font-bold" asChild>
                   <Link
