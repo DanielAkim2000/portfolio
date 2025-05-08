@@ -52,9 +52,9 @@ const getProject = async (id: string) => {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }): Promise<Metadata> {
-  const { id, locale } = params;
+  const { id, locale } = await params;
   const project = await getProject(id);
 
   if (!project) {
