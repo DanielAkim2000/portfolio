@@ -16,6 +16,16 @@ import { createId } from "@/lib/utils";
 import { LinkIcon, MailIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { JSX } from "react";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("contact");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("subtitle"),
+  };
+}
 
 const TableContact = ({
   head,

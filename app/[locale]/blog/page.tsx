@@ -3,6 +3,16 @@ import { SectionPosts } from "@/components/sections/blog/posts.section";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getTranslations } from "next-intl/server";
 import { getAllBlogs } from "@/actions/get-all-blogs";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("blog");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("subtitle"),
+  };
+}
 
 const getBlogs = async () => {
   const blogs = await fetch("http://localhost:3000/api/blogs", {

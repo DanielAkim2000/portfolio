@@ -3,6 +3,16 @@ import { SectionProjects } from "@/components/sections/projects/projects.section
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getAllProjects } from "@/actions/get-all-projects";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("projects");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("description"),
+  };
+}
 
 export type PageProjectsProps = {
   params: Promise<{ locale: string }>;

@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { StickyBarWrapper } from "@/components/wrapper/sticky-bar-wrapper";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getContentFromProject, getTitleFromContentMdx } from "@/lib/mdx-utils";
-import { Title } from "@/prisma/generated";
+import { Content, Title } from "@/prisma/generated";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Globe } from "lucide-react";
+import { Metadata } from "next";
 
 const GithubButton = ({
   variant = "default",
@@ -47,6 +48,33 @@ const getProject = async (id: string) => {
   });
   return res.json() as Promise<ReturnType<typeof getProjectAction>>;
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string; locale: string };
+}): Promise<Metadata> {
+  const { id, locale } = params;
+  const project = await getProject(id);
+
+  if (!project) {
+    return {
+      title: "Projet non trouvé",
+      description: "Ce projet n'existe pas ou a été supprimé.",
+    };
+  }
+
+  const title =
+    project?.title.find((t: Title) => t.locale === locale)?.title || "";
+  const description =
+    project?.description.find((d: Content) => d.locale === locale)?.content ||
+    "";
+
+  return {
+    title: `${title} | Projets | Akim Emane`,
+    description: description,
+  };
+}
 
 // afficher aussi la description du title
 export default async function ProjectPage({

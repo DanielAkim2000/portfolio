@@ -5,6 +5,16 @@ import TitleWorkSections from "@/components/typography/work/title-work-sections"
 import { Separator } from "@/components/ui/separator";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("experience");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("description"),
+  };
+}
 
 export default async function ExperiencePage() {
   const t = await getTranslations("experience");

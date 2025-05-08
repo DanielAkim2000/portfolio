@@ -45,8 +45,7 @@ export const CardReactionItem = ({
   const handleClick = async () => {
     setShowFlying(true);
     const timer = setTimeout(() => {
-      setShowFlying(false);
-      onMouseLeave();
+      setShowFlying(false)
     }, 100);
     const reactionType = getReactionType(info);
     if (reactionType) {
@@ -65,9 +64,12 @@ export const CardReactionItem = ({
         error: () => {
           return t("reaction_error");
         },
+        finally: () => {
+          clearTimeout(timer);
+          onMouseLeave();
+        },
       });
     }
-    return () => clearTimeout(timer);
   };
 
   return (
@@ -80,6 +82,7 @@ export const CardReactionItem = ({
       </div>
       <div onClick={handleClick}>
         <DynamicLottie
+        onClick={onMouseEnter}
           onMouseOut={onMouseLeave}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}

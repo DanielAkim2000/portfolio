@@ -7,6 +7,7 @@ import { StickyBarWrapper } from "@/components/wrapper/sticky-bar-wrapper";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getContentFromBlog, getTitleFromContentMdx } from "@/lib/mdx-utils";
 import { Title } from "@/prisma/generated";
+import { Metadata } from "next";
 
 const getBlog = async (id: string) => {
   const blog = await fetch(`http://localhost:3000/api/blog?id=${id}`, {
@@ -16,6 +17,31 @@ const getBlog = async (id: string) => {
   });
   return blog.json() as Promise<ReturnType<typeof getBlogAction>>;
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string; locale: string };
+}): Promise<Metadata> {
+  const { id, locale } = params;
+  const blog = await getBlog(id);
+
+  if (!blog) {
+    return {
+      title: "Article non trouvé",
+      description: "Cet article n'existe pas ou a été supprimé.",
+    };
+  }
+
+  const title = blog.title.find((t: Title) => t.locale === locale)?.title || "";
+  const description =
+    blog.title.find((d: Title) => d.locale === locale)?.description || "";
+
+  return {
+    title: `${title} | Blog | Akim Emane`,
+    description: description,
+  };
+}
 
 export default async function BlogPage({
   params,

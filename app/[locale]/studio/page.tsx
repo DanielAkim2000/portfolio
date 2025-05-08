@@ -7,6 +7,7 @@ import TitleWorkSections from "@/components/typography/work/title-work-sections"
 import { createId } from "@/lib/utils";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
+import { Metadata } from "next";
 
 const CardStudio = ({
   title,
@@ -29,6 +30,14 @@ const CardStudio = ({
   );
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("studio");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("description"),
+  };
+}
 export default async function StudioPage() {
   const t = await getTranslations("studio");
 

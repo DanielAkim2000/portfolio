@@ -6,6 +6,18 @@ import {
 } from "@/components/sections/home/devops.section";
 import { HomeSectionsMe } from "@/components/sections/home/me.sections";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("home");
+
+  return {
+    title: "Akim Emane - Portfolio",
+    description: t(
+      "designing_modular_secure_apis_with_scalable_architecture_prioritizing_clean_code_and_efficient_data_flow"
+    ),
+  };
+}
 
 const TextCoffee = ({ t }: { t: (param: string) => string }) => {
   return (

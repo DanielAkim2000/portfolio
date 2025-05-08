@@ -6,6 +6,17 @@ import TitleWorkSections from "@/components/typography/work/title-work-sections"
 import { createId } from "@/lib/utils";
 import { getTranslations } from "next-intl/server";
 import { StickyBarWrapper } from "@/components/wrapper/sticky-bar-wrapper";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("skills_tools");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("description"),
+  };
+}
+
 const CardSkillsAndTools = ({
   title,
   paragraph,

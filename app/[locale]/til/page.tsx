@@ -4,6 +4,16 @@ import SectionTil from "@/components/sections/T.I.L/til.section";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getTranslations } from "next-intl/server";
 import { serialize } from "next-mdx-remote-client/serialize";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("til");
+
+  return {
+    title: `${t("title")} | Akim Emane`,
+    description: t("description"),
+  };
+}
 
 export default async function TilPage({
   params,
