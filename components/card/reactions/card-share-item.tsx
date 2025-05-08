@@ -96,8 +96,15 @@ export const CardShareItem = ({
       </div>
       <div>
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            onClick={() => {
+              setTimeout(() => {
+                onMouseLeave();
+              }, 100);
+            }}
+          >
             <DynamicLottie
+              onMouseOut={onMouseLeave}
               onMouseEnter={onMouseEnter}
               onMouseLeave={onMouseLeave}
               onBlur={onMouseLeave}

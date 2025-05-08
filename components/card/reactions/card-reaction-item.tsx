@@ -44,7 +44,10 @@ export const CardReactionItem = ({
 
   const handleClick = async () => {
     setShowFlying(true);
-    const timer = setTimeout(() => setShowFlying(false), 100);
+    const timer = setTimeout(() => {
+      setShowFlying(false);
+      onMouseLeave();
+    }, 100);
     const reactionType = getReactionType(info);
     if (reactionType) {
       const promise =
@@ -77,6 +80,7 @@ export const CardReactionItem = ({
       </div>
       <div onClick={handleClick}>
         <DynamicLottie
+          onMouseOut={onMouseLeave}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           onBlur={onMouseLeave}
