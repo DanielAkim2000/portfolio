@@ -10,9 +10,9 @@ services:
       POSTGRES_PASSWORD: postgres_next_js
       POSTGRES_DB: portfolio
     ports:
-      - 5432:5432
+      - 5433:5432 # Changed from 5432 to 5433 to avoid conflict with the default port 5432
     volumes:
-      - /home/nna-ekamkam/docker/pgdata:/var/lib/postgresql/data
+      - /home/nna-ekamkam/docker/pgdata-portfolio:/var/lib/postgresql/data
     networks:
       - portfolio-network
     healthcheck:

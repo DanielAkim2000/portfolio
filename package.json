@@ -10,7 +10,7 @@
     "prisma:migrate:prod": "prisma migrate deploy",
     "prisma:generate:prod": "prisma generate",
     "prisma:studio": "prisma studio",
-    "prisma:push:prod": "psql -U postgres_portfolio -d portfolio -f dump/portfolio_dump.sql"
+    "prisma:push:prod": "psql -U postgres_portfolio -d portfolio -f prisma/dump/portfolio_dump.sql"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.0",
