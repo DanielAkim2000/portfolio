@@ -43,7 +43,7 @@ services:
       timeout: 10s
       retries: 5
     command: >
-      sh -c "pnpm prisma:migrate:prod && pnpm prisma:generate:prod && pnpm prisma:push:prod && pnpm build && pnpm start"
+      sh -c "pnpm prisma:migrate:prod && pnpm prisma:generate:prod && pnpm build && pnpm start"
 
 networks:
   portfolio-network:
