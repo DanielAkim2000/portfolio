@@ -20,7 +20,7 @@ jobs:
       - name: Copy files to server
         run: |
           ssh -o StrictHostKeyChecking=no -p 2222 nna-ekamkam@86.196.4.160 << 'EOF'
-            cd /home/nna-ekamkam/projets/portfolio
+            cd /home/nna-ekamkam/projets/portfolio_next_js
             git pull origin main
             docker-compose down
             docker-compose up -d --build
