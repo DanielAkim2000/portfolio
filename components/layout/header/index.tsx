@@ -17,9 +17,9 @@ const Header = () => {
   const sentinelRef = useRef(null);
 
   /**
-   * Créer un IntersectionObserver qui observe l’élément sentinelRef (juste avant le header).
+   * Créer un IntersectionObserver qui observe l'élément sentinelRef (juste avant le header).
 
-      Quand sentinelRef quitte l’écran (entry.isIntersecting === false), setIsSticky(true), donc le header devient sticky.
+      Quand sentinelRef quitte l'écran (entry.isIntersecting === false), setIsSticky(true), donc le header devient sticky.
 
       Quand sentinelRef est visible (entry.isIntersecting === true), setIsSticky(false), donc le header redevient normal.
 
@@ -27,7 +27,7 @@ const Header = () => {
 
       📌 Pourquoi threshold: 0.1 ?
 
-      Cela signifie que 10% de l’élément doit être visible avant qu’il soit considéré comme "intersecté".
+      Cela signifie que 10% de l'élément doit être visible avant qu'il soit considéré comme "intersecté".
 
       Si on mettait 0, il déclencherait trop tôt.
    */
@@ -57,7 +57,7 @@ const Header = () => {
       />
       <nav
         className={`py-4 px-4 pt-4 flex items-center ${
-          !focusMode && "sticky top-0 z-50"
+          !focusMode && "sticky top-0 z-30"
         }  ${
           isSticky && !focusMode
             ? "border-b bg-white/70 dark:bg-slate-900/80"
@@ -73,13 +73,17 @@ const Header = () => {
               <IconHeader />
             </li>
             <li>
-              <HeaderLink text={t("projects")} href="/projects" />
+              <HeaderLink
+                text={t("projects")}
+                href="/projects"
+                variant="primary"
+              />
             </li>
             <li>
-              <HeaderLink text={t("blog")} href="/blog" />
+              <HeaderLink text={t("blog")} href="/blog" variant="primary" />
             </li>
             <li>
-              <HeaderLink text={t("til")} href="/til" />
+              <HeaderLink text={t("til")} href="/til" variant="primary" />
             </li>
             <li>
               <HeaderWorkMenu />

@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export const Footer = () => {
   const t = useTranslations("footer");
@@ -18,26 +19,80 @@ export const Footer = () => {
             <li className="text-slate-600 dark:text-slate-400 mb-4 font-semibold">
               {t("work")}
             </li>
-            <li className="text-md font-semibold mb-2">{t("contact")}</li>
-            <li className="text-md font-semibold mb-2">{t("experience")}</li>
             <li className="text-md font-semibold mb-2">
-              {t("skills_and_tools")}
+              <Link
+                href="/contact"
+                className="hover:text-primary transition-colors"
+              >
+                {t("contact")}
+              </Link>
             </li>
-            <li className="text-md font-semibold mb-2">{t("studio")}</li>
+            <li className="text-md font-semibold mb-2">
+              <Link
+                href="/experience"
+                className="hover:text-primary transition-colors"
+              >
+                {t("experience")}
+              </Link>
+            </li>
+            <li className="text-md font-semibold mb-2">
+              <Link
+                href="/skills-tools"
+                className="hover:text-primary transition-colors"
+              >
+                {t("skills_and_tools")}
+              </Link>
+            </li>
+            <li className="text-md font-semibold mb-2">
+              <Link
+                href="/studio"
+                className="hover:text-primary transition-colors"
+              >
+                {t("studio")}
+              </Link>
+            </li>
           </ul>
           <ul className="flex-1">
             <li className="text-slate-600 dark:text-slate-400 mb-4 font-semibold">
               {t("learn")}
             </li>
-            <li className="text-md font-semibold mb-2">{t("docs")}</li>
-            <li className="text-md font-semibold mb-2">{t("personal_blog")}</li>
-            <li className="text-md font-semibold mb-2">{t("til")}</li>
+            <li className="text-md font-semibold mb-2">
+              <Link
+                href="/projects"
+                className="hover:text-primary transition-colors"
+              >
+                {t("docs")}
+              </Link>
+            </li>
+            <li className="text-md font-semibold mb-2">
+              <Link
+                href="/blog"
+                className="hover:text-primary transition-colors"
+              >
+                {t("personal_blog")}
+              </Link>
+            </li>
+            <li className="text-md font-semibold mb-2">
+              <Link
+                href="/til"
+                className="hover:text-primary transition-colors"
+              >
+                {t("til")}
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
       <div className="flex justify-between text-xs border-t py-6 border-slate-200 dark:border-slate-700">
         <span className="font-bold">{t("copyright")}</span>
-        <span>{t("github_updates")}</span>
+        <a
+          href="https://github.com/DanielAkim2000"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-primary transition-colors"
+        >
+          {t("github_updates")}
+        </a>
       </div>
     </footer>
   );

@@ -32,9 +32,6 @@ export const CardReactionItem = ({
   id,
   animationData,
   count,
-  isHovering,
-  onMouseEnter,
-  onMouseLeave,
   width = 50,
   info,
   type,
@@ -45,7 +42,7 @@ export const CardReactionItem = ({
   const handleClick = async () => {
     setShowFlying(true);
     const timer = setTimeout(() => {
-      setShowFlying(false)
+      setShowFlying(false);
     }, 100);
     const reactionType = getReactionType(info);
     if (reactionType) {
@@ -66,7 +63,6 @@ export const CardReactionItem = ({
         },
         finally: () => {
           clearTimeout(timer);
-          onMouseLeave();
         },
       });
     }
@@ -82,14 +78,9 @@ export const CardReactionItem = ({
       </div>
       <div onClick={handleClick}>
         <DynamicLottie
-        onClick={onMouseEnter}
-          onMouseOut={onMouseLeave}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          onBlur={onMouseLeave}
           animationData={animationData}
-          loop={isHovering}
-          autoplay={isHovering}
+          loop={false}
+          autoplay={false}
           style={{
             width: `${width}px`,
             height: `${width}px`,
@@ -106,8 +97,8 @@ export const CardReactionItem = ({
           <motion.div
             initial={{ opacity: 1, y: 0, scale: 1 }}
             animate={{ opacity: 0, y: -100, scale: 1.5 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            exit={{ opacity: 1 }}
+            transition={{ duration: 1.25 }}
             className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
           >
             <DynamicLottie

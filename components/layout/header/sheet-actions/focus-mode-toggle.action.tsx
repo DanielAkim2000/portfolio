@@ -3,7 +3,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-export const FocusModeToggle = () => {
+export const FocusModeToggle = ({ isOpen }: { isOpen: boolean }) => {
   const t = useTranslations("header");
   const { focusMode, setFocusMode } = useSettings();
 
@@ -24,6 +24,7 @@ export const FocusModeToggle = () => {
               title: "text-sm font-semibold",
               icon: "self-start",
             },
+            position: isOpen ? "top-center" : "top-right",
           }
         );
       }}

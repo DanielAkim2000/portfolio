@@ -1,11 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Highlight, themes, type Language } from "prism-react-renderer";
 import { cn } from "@/lib/utils";
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
 import copy from "copy-to-clipboard";
 import { ClipboardCheckIcon, ClipboardIcon } from "lucide-react";
+
+// Skeleton pour le chargement
+const CodeBlockSkeleton = () => (
+  <div className="relative rounded-md overflow-hidden shadow-sm flex flex-col w-full animate-pulse lg:max-w-xl">
+    <div className="flex items-center justify-between px-4 py-2 bg-slate-200 dark:bg-slate-700 text-xs h-8">
+      <div className="w-12 h-4 bg-slate-300 dark:bg-slate-600 rounded"></div>
+      <div className="w-6 h-6 bg-slate-300 dark:bg-slate-600 rounded"></div>
+    </div>
+    <div className="bg-slate-100 dark:bg-slate-800 p-4 ">
+      {[...Array(5)].map((_, i) => (
+        <div
+          key={i}
+          className="h-4 bg-slate-200 dark:bg-slate-700 rounded my-2 w-full"
+          style={{ width: "100%" }}
+        ></div>
+      ))}
+    </div>
+  </div>
+);
 
 interface CodeBlockProps {
   readonly code: string;
@@ -17,8 +36,15 @@ interface CodeBlockProps {
 
 export function CodeBlock({ code, language, className }: CodeBlockProps) {
   const resolvedTheme = useCurrentTheme();
-  const isDark = resolvedTheme === "dark";
   const [isCopied, setIsCopied] = useState(false);
+  const [isThemeLoaded, setIsThemeLoaded] = useState(false);
+  const isDark = resolvedTheme === "dark";
+
+  useEffect(() => {
+    if (resolvedTheme) {
+      setIsThemeLoaded(true);
+    }
+  }, [resolvedTheme]);
 
   const copyToClipboard = async () => {
     if (isCopied) return;
@@ -29,6 +55,13 @@ export function CodeBlock({ code, language, className }: CodeBlockProps) {
       setIsCopied(false);
     }, 5000);
   };
+
+  // Comptage des lignes
+  const lineCount = code.trim().split("\n").length;
+
+  if (!isThemeLoaded) {
+    return <CodeBlockSkeleton />;
+  }
 
   return (
     <div
@@ -71,35 +104,43 @@ export function CodeBlock({ code, language, className }: CodeBlockProps) {
         theme={isDark ? themes.vsDark : themes.vsLight}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre
-            className={cn(className, "text-sm p-4 overflow-x-auto w-full")}
-            style={{
-              ...style,
-              maxWidth: "100%",
-              overflowWrap: "normal",
-            }}
-          >
-            {tokens.map((line, i) => {
-              const { key, ...lineProps } = getLineProps({ line, key: i });
-              return (
-                <div
-                  key={key as React.Key}
-                  {...lineProps}
-                  className="whitespace-pre"
-                >
-                  {line.map((token, tokenKey) => {
-                    const { key: tokenKeyProp, ...tokenProps } = getTokenProps({
-                      token,
-                      key: tokenKey,
-                    });
-                    return (
-                      <span key={tokenKeyProp as React.Key} {...tokenProps} />
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </pre>
+          <div className="relative">
+            <pre
+              className={cn(
+                className,
+                "text-sm p-4 overflow-x-auto max-w-full"
+              )}
+              style={{
+                ...style,
+                overflowWrap: "normal",
+              }}
+            >
+              {tokens.map((line, i) => {
+                const { key, ...lineProps } = getLineProps({ line, key: i });
+                return (
+                  <div
+                    key={key as React.Key}
+                    {...lineProps}
+                    className="whitespace-pre"
+                  >
+                    {line.map((token, tokenKey) => {
+                      const { key: tokenKeyProp, ...tokenProps } =
+                        getTokenProps({
+                          token,
+                          key: tokenKey,
+                        });
+                      return (
+                        <span key={tokenKeyProp as React.Key} {...tokenProps} />
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </pre>
+            <div className="absolute bottom-2 right-2 text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-sm">
+              {lineCount} {lineCount === 1 ? "line" : "lines"}
+            </div>
+          </div>
         )}
       </Highlight>
     </div>

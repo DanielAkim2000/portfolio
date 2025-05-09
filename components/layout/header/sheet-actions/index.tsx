@@ -1,81 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { useCurrentTheme } from "@/hooks/useCurrentTheme";
-import ThemeToggle from "./theme-toggle.action";
-import { FocusModeToggle } from "./focus-mode-toggle.action";
-import { useLocale, useTranslations } from "next-intl";
-import ChangeLangue from "./change-langue";
 import { useEffect, useState, useReducer, useMemo } from "react";
-import {
-  CardView,
-  CardReaction,
-  CardShare,
-  EmptyRecentActivity,
-} from "@/components/layout/header/sheet-actions/card-actions-center";
-import {
-  useActionCenterData,
-  ActionCenterState,
-  Action,
-} from "@/hooks/actions-center/useActonCenterData";
-import { ComponentLoading } from "./loading.component";
+import { useActionCenterData } from "@/hooks/actions-center/useActonCenterData";
+import { useCurrentTheme } from "@/hooks/useCurrentTheme";
+import { useLocale, useTranslations } from "next-intl";
+import { useBreakpoint } from "@/hooks/useBreakPoint";
+import { useSettings } from "@/zustand/settings.store";
+import { useTheme } from "next-themes";
+import { toast } from "sonner";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Composants extraits
+import { ActionButton } from "./action-button";
+import { KeyboardShortcutsSection } from "./keyboard-shortcuts-section";
+import { ActionPanelContent } from "./action-panel-content";
+import { reducer } from "./reducer";
+
+// Utils
 import {
   addOtherDataToFetchViewsData,
   addOtherDataToFetchShareData,
   filterReactionsDataIn24h,
   mergeData,
 } from "@/utils/action-center";
-import { X } from "lucide-react";
-
-interface LayoutIconProps {
-  color: string;
-  width: number;
-}
-
-const LayoutIcon = ({ color, width }: LayoutIconProps) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
-      height={width}
-      viewBox="0 0 24 24"
-      fill={color}
-      stroke={color}
-    >
-      <rect width="7" height="9" x="3" y="3" rx="1" />
-      <rect width="7" height="5" x="14" y="3" rx="1" />
-      <rect width="7" height="9" x="14" y="12" rx="1" />
-      <rect width="7" height="5" x="3" y="16" rx="1" />
-    </svg>
-  );
-};
-
-// reducer pour la gestion des états
-const reducer = (
-  state: ActionCenterState,
-  action: Action
-): ActionCenterState => {
-  switch (action.type) {
-    case "SET_REACTION_DATA":
-      console.log("[HeaderSheet] SET_REACTION_DATA", action.payload);
-      return { ...state, reactionData: action.payload };
-    case "SET_SHARE_DATA":
-      console.log("[HeaderSheet] SET_SHARE_DATA", action.payload);
-      return { ...state, shareData: action.payload };
-    case "SET_REACTIONS":
-      console.log("[HeaderSheet] SET_REACTIONS", action.payload);
-      return { ...state, reactions: action.payload };
-    default:
-      return state;
-  }
-};
 
 export const HeaderSheet = () => {
   const { reactions, sharesOrViews, isLoading, mutate } = useActionCenterData({
@@ -88,21 +36,44 @@ export const HeaderSheet = () => {
   });
   const locale = useLocale();
   const theme = useCurrentTheme();
+  const { setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("header");
+  const isXl = useBreakpoint("xl");
+  const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
+
+  // accès à l'état du focus mode pour le raccourci clavier
+  const { focusMode, setFocusMode } = useSettings();
+
+  // fonction pour basculer le thème
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  // fonction pour basculer le mode focus
+  const toggleFocusMode = () => {
+    setFocusMode(!focusMode);
+    toast.info(
+      <span className="text-primary">
+        Focus mode is now {!focusMode ? "on" : "off"}
+      </span>,
+      {
+        description: t("focus_mode_description"),
+        classNames: {
+          title: "text-sm font-semibold",
+          icon: "self-start",
+        },
+        position: isOpen ? "top-center" : "top-right",
+      }
+    );
+  };
 
   const mergedData = useMemo(() => {
     if (!state.reactions || !state.shareData || !state.reactionData) {
       return [];
     }
 
-    const result = mergeData(
-      state.reactions,
-      state.shareData,
-      state.reactionData
-    );
-
-    return result;
+    return mergeData(state.reactions, state.shareData, state.reactionData);
   }, [state.reactions, state.shareData, state.reactionData]);
 
   useEffect(() => {
@@ -116,137 +87,121 @@ export const HeaderSheet = () => {
     if (sharesOrViews) {
       // Traitement des vues
       const viewsData = addOtherDataToFetchViewsData(sharesOrViews);
-
-      dispatch({
-        type: "SET_REACTION_DATA",
-        payload: viewsData,
-      });
+      dispatch({ type: "SET_REACTION_DATA", payload: viewsData });
 
       const shareData = addOtherDataToFetchShareData(sharesOrViews);
-
-      dispatch({
-        type: "SET_SHARE_DATA",
-        payload: shareData,
-      });
+      dispatch({ type: "SET_SHARE_DATA", payload: shareData });
     }
 
     if (reactions) {
       const filteredReactions = filterReactionsDataIn24h(reactions);
-
-      dispatch({
-        type: "SET_REACTIONS",
-        payload: filteredReactions,
-      });
+      dispatch({ type: "SET_REACTIONS", payload: filteredReactions });
     }
   }, [reactions, sharesOrViews, isOpen]);
 
+  // Empêcher le scroll du body quand le panneau est ouvert
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  // Initialisation du portail
+  useEffect(() => {
+    setPortalElement(document.body);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      // Q pour ouvrir/fermer le panneau
+      if (e.key.toLowerCase() === "q") {
+        setIsOpen((prev) => !prev);
+      }
+
+      // D pour basculer le thème
+      if (e.key.toLowerCase() === "d") {
+        toggleTheme();
+      }
+
+      // F pour basculer le mode focus
+      if (e.key.toLowerCase() === "f") {
+        toggleFocusMode();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, toggleFocusMode]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <div className="flex items-center">
-          <Button
-            size={"icon"}
-            variant={"secondary"}
-            className="bg-accent dark:bg-slate-950/90"
-          >
-            <LayoutIcon
-              color={theme === "light" ? "#000" : "#FFF"}
-              width={24}
-            />
-          </Button>
-        </div>
-      </DialogTrigger>
+    <>
+      <ActionButton
+        theme={theme}
+        isXl={isXl}
+        locale={locale}
+        setIsOpen={setIsOpen}
+      />
 
-      <DialogContent
-        aria-describedby="action-center"
-        aria-controls="action-center"
-        aria-expanded={isOpen}
-        className="min-w-full max-h-screen h-full pt-20  px-4 flex flex-row bg-slate-100/90 dark:bg-background/90 rounded-none border-0"
-      >
-        <DialogClose asChild>
-          <Button
-            size={"icon"}
-            variant={"secondary"}
-            className="absolute top-3 right-4 z-10 theme-blur"
-          >
-            <X className="h-4 w-4 text-muted-foreground" />
-          </Button>
-        </DialogClose>
-        <div className="sm:w-[320px] ml-auto w-full h-full flex flex-col">
-          <DialogTitle className="text-start text-2xl font-semibold mb-4">
-            {t("action_center")}
-          </DialogTitle>
-          <div className="w-full flex gap-2">
-            <ThemeToggle />
-            <FocusModeToggle />
-          </div>
-          <div className="flex justify-end mt-4">
-            <ChangeLangue />
-          </div>
-          <div className="my-2">
-            <span className="text-xl font-bold text-black dark:text-white">
-              Recently Activity
-            </span>
-          </div>
-          <div className="flex flex-col gap-2 overflow-y-scroll overflow-hidden flex-1 scrollbar-hide">
-            {isLoading ? (
-              <ComponentLoading />
-            ) : (
+      {portalElement &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
               <>
-                {mergedData.length > 0 ? (
-                  mergedData.map((data) => {
-                    console.log(
-                      "[HeaderSheet] Rendu item:",
-                      data.typeData,
-                      data.id
-                    );
+                {/* Overlay/backdrop */}
+                <motion.div
+                  key="overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 w-full h-screen"
+                  onClick={() => setIsOpen(false)}
+                />
 
-                    if (data.typeData === "reaction") {
-                      return (
-                        <CardReaction
-                          key={`reaction-${data.id}`}
-                          data={data}
-                          locale={locale}
-                          id={data.id || ""}
-                          close={() => setIsOpen(false)}
-                        />
-                      );
-                    }
-                    if (
-                      data.typeData === "shareOrView" ||
-                      data.typeData === "share"
-                    ) {
-                      return (
-                        <CardShare
-                          key={`share-${data.id}`}
-                          data={data}
-                          locale={locale}
-                          id={data.id || ""}
-                          close={() => setIsOpen(false)}
-                        />
-                      );
-                    }
-                    if (data.typeData === "view") {
-                      return (
-                        <CardView
-                          key={`view-${data.id}`}
-                          data={data}
-                          locale={locale}
-                          id={data.id || ""}
-                          close={() => setIsOpen(false)}
-                        />
-                      );
-                    }
-                    return null;
-                  })
-                ) : (
-                  <EmptyRecentActivity />
-                )}
+                {/* Panel du centre d'actions - prend toute la largeur en xl */}
+                <motion.div
+                  key="actionPanel"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  className="fixed xl:left-0 right-0 top-0 bottom-0 min-w-full w-full h-[100dvh] flex flex-col xl:flex-row bg-slate-100/90 dark:bg-background/90 z-50 overflow-hidden"
+                  aria-describedby="action-center"
+                  aria-controls="action-center"
+                  aria-expanded={isOpen}
+                >
+                  {isXl && <KeyboardShortcutsSection locale={locale} />}
+
+                  <ActionPanelContent
+                    locale={locale}
+                    t={t}
+                    isXl={isXl}
+                    isOpen={isOpen}
+                    isLoading={isLoading}
+                    mergedData={mergedData}
+                    setIsOpen={setIsOpen}
+                  />
+                </motion.div>
               </>
             )}
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+          </AnimatePresence>,
+          portalElement
+        )}
+    </>
   );
 };

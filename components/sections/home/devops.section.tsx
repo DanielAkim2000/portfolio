@@ -94,9 +94,11 @@ const SectionCardDevOps2 = () => {
     <div className="flex-1">
       <div className="px-6 md:px-12 ml-auto mr-auto max-w-[75rem] mb-6">
         <TitleBlock
-          title="DevOps (Reliable & Automated)"
-          subtitle="Automated, Scalable & CD Pipelines."
-          description="Streamlining infrastructure and CI/CD workflows to support seamless development."
+          title="DevOps (En apprentissage)"
+          subtitle={t("infrastructure_as_code_with_seamless_ci_cd")}
+          description={t(
+            "emphasizing_automation_monitoring_and_reliability_to_ensure_smooth_deployments_and_maintain_high_system_uptime"
+          )}
         />
       </div>
       <div className="flex flex-col gap-4 mb-6">

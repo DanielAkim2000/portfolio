@@ -64,11 +64,23 @@ export const CardView = ({ data, locale, id, close }: CardProps) => (
   >
     <div className="w-full flex flex-row mt-4">
       <p className="text-sm dark:text-slate-400 text-slate-600">
-        Vous avez vu{" "}
-        <span className="text-primary">
-          {data.title.find((title) => title.locale === locale)?.title}
-        </span>{" "}
-        {data.model === "Blog" ? "blog post" : "project"}
+        {locale === "fr" ? (
+          <>
+            Vous avez consulté{" "}
+            <span className="text-primary">
+              {data.title.find((title) => title.locale === locale)?.title}
+            </span>{" "}
+            {data.model === "Blog" ? "l'article" : "le projet"}
+          </>
+        ) : (
+          <>
+            You viewed the{" "}
+            <span className="text-primary">
+              {data.title.find((title) => title.locale === locale)?.title}
+            </span>{" "}
+            {data.model === "Blog" ? "blog post" : "project"}
+          </>
+        )}
       </p>
     </div>
   </BaseCard>
@@ -91,7 +103,7 @@ export const CardReaction = ({ data, locale, id, close }: CardProps) => {
 
   return (
     <BaseCard
-      title="REACTION"
+      title={locale === "fr" ? "RÉACTION" : "REACTION"}
       date={data.createdAt}
       link={data.model === "Blog" ? `/blog/${id}` : `/projects/${id}`}
       close={close}
@@ -100,27 +112,49 @@ export const CardReaction = ({ data, locale, id, close }: CardProps) => {
       <div className="w-full flex flex-row mt-4">
         <p className="text-sm dark:text-slate-400 text-slate-600">
           {hasMultipleReactions ? (
+            locale === "fr" ? (
+              <>
+                Vous avez ajouté plusieurs réactions à{" "}
+                <span className="text-primary">
+                  {data.title.find((title) => title.locale === locale)?.title}
+                </span>{" "}
+                {data.model === "Blog" ? "l'article" : "au projet"}{" "}
+                <span className="text-primary flex space-x-1">
+                  {data.allTypes?.map((type, index) => (
+                    <span key={index}>{getSmiley(type.type)}</span>
+                  ))}
+                </span>
+              </>
+            ) : (
+              <>
+                You added multiple reactions to the{" "}
+                <span className="text-primary">
+                  {data.title.find((title) => title.locale === locale)?.title}
+                </span>{" "}
+                {data.model === "Blog" ? "blog post" : "project"}{" "}
+                <span className="text-primary flex space-x-1">
+                  {data.allTypes?.map((type, index) => (
+                    <span key={index}>{getSmiley(type.type)}</span>
+                  ))}
+                </span>
+              </>
+            )
+          ) : locale === "fr" ? (
             <>
-              Le{" "}
+              Vous avez réagi à{" "}
               <span className="text-primary">
                 {data.title.find((title) => title.locale === locale)?.title}
               </span>{" "}
-              {data.model === "Blog" ? "blog post" : "project"} a reçu plusieurs
-              réactions{" "}
-              <span className="text-primary flex space-x-1">
-                {data.allTypes?.map((type, index) => (
-                  <span key={index}>{getSmiley(type.type)}</span>
-                ))}
-              </span>
+              {data.model === "Blog" ? "l'article" : "au projet"} avec{" "}
+              <span className="text-primary">{mainSmiley}</span>
             </>
           ) : (
             <>
-              Le{" "}
+              You reacted to the{" "}
               <span className="text-primary">
                 {data.title.find((title) => title.locale === locale)?.title}
               </span>{" "}
-              {data.model === "Blog" ? "blog post" : "project"} a reçu une
-              nouvelle réaction{" "}
+              {data.model === "Blog" ? "blog post" : "project"} with{" "}
               <span className="text-primary">{mainSmiley}</span>
             </>
           )}
@@ -132,7 +166,7 @@ export const CardReaction = ({ data, locale, id, close }: CardProps) => {
 
 export const CardShare = ({ data, locale, id, close }: CardProps) => (
   <BaseCard
-    title="SHARE"
+    title={locale === "fr" ? "PARTAGE" : "SHARE"}
     date={data.createdAt}
     link={data.model === "Blog" ? `/blog/${id}` : `/projects/${id}`}
     close={close}
@@ -140,11 +174,23 @@ export const CardShare = ({ data, locale, id, close }: CardProps) => (
   >
     <div className="w-full flex flex-row mt-4">
       <p className="text-sm dark:text-slate-400 text-slate-600">
-        Vous avez partagé{" "}
-        <span className="text-primary">
-          {data.title.find((title) => title.locale === locale)?.title}
-        </span>{" "}
-        {data.model === "Blog" ? "blog post" : "project"}
+        {locale === "fr" ? (
+          <>
+            Vous avez partagé{" "}
+            <span className="text-primary">
+              {data.title.find((title) => title.locale === locale)?.title}
+            </span>{" "}
+            {data.model === "Blog" ? "l'article" : "le projet"}
+          </>
+        ) : (
+          <>
+            You shared the{" "}
+            <span className="text-primary">
+              {data.title.find((title) => title.locale === locale)?.title}
+            </span>{" "}
+            {data.model === "Blog" ? "blog post" : "project"}
+          </>
+        )}
       </p>
     </div>
   </BaseCard>

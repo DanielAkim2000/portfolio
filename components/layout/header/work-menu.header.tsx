@@ -10,6 +10,7 @@ import { useBreakpoint } from "@/hooks/useBreakPoint";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { HeaderLink } from "./link.header";
 
 const Trigger = ({
   rotate,
@@ -38,22 +39,22 @@ export const HeaderWorkMenu = () => {
     return (
       <div className="flex items-center gap-4 text-tertiary font-bold">
         <Trigger rotate t={t} />
-        <div className="flex gap-2 items-center">
-          <Link href="/skills-tools">
-            <span className="text-sm cursor-pointer">{t("skills_tools")}</span>
-          </Link>
+        <div className="flex gap-4 items-center">
+          <HeaderLink
+            text={t("skills_tools")}
+            href="/skills-tools"
+            variant="tertiary"
+          />
           <Dot />
-          <Link href="/experience">
-            <span className="text-sm cursor-pointer">{t("experience")}</span>
-          </Link>
+          <HeaderLink
+            text={t("experience")}
+            href="/experience"
+            variant="tertiary"
+          />
           <Dot />
-          <Link href="/studio">
-            <span className="text-sm cursor-pointer">{t("studio")}</span>
-          </Link>
+          <HeaderLink text={t("studio")} href="/studio" variant="tertiary" />
           <Dot />
-          <Link href="/contact">
-            <span className="text-sm cursor-pointer">{t("contact")}</span>
-          </Link>
+          <HeaderLink text={t("contact")} href="/contact" variant="tertiary" />
         </div>
       </div>
     );
@@ -71,22 +72,22 @@ export const HeaderWorkMenu = () => {
         }}
       >
         <Link href="/skills-tools">
-          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer">
+          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer dark:hover:bg-slate-800">
             {t("skills_tools")}
           </DropdownMenuItem>
         </Link>
         <Link href="/experience">
-          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer">
+          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer dark:hover:bg-slate-800">
             {t("experience")}
           </DropdownMenuItem>
         </Link>
         <Link href="/studio">
-          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer">
+          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer dark:hover:bg-slate-800">
             {t("studio")}
           </DropdownMenuItem>
         </Link>
         <Link href="/contact">
-          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer">
+          <DropdownMenuItem className="group-hover:!text-tertiary group-hover:cursor-pointer group-active:!text-tertiary group-active:cursor-pointer dark:hover:bg-slate-800">
             {t("contact")}
           </DropdownMenuItem>
         </Link>
