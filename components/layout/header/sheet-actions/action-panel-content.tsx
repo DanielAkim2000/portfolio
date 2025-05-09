@@ -64,7 +64,7 @@ export const ActionPanelContent = ({
         </div>
 
         {/* Container scrollable */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
           <div className="flex flex-col gap-2">
             {isLoading ? (
               <ComponentLoading />

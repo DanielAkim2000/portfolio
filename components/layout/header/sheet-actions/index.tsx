@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useReducer, useMemo } from "react";
+import { useEffect, useState, useReducer, useMemo, useCallback } from "react";
 import { useActionCenterData } from "@/hooks/actions-center/useActonCenterData";
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
 import { useLocale, useTranslations } from "next-intl";
@@ -46,9 +46,9 @@ export const HeaderSheet = () => {
   const { focusMode, setFocusMode } = useSettings();
 
   // fonction pour basculer le thème
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");
-  };
+  }, [theme, setTheme]);
 
   // fonction pour basculer le mode focus
   const toggleFocusMode = () => {
