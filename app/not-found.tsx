@@ -4,11 +4,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { HomeIcon } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 
 export default function NotFound() {
-  const t = useTranslations("not-found");
-
   return (
     <div className="min-h-[80vh] w-full flex items-center justify-center">
       <motion.div
@@ -84,7 +81,7 @@ export default function NotFound() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            {t("title")}
+            Page not found
           </motion.h2>
 
           <motion.p
@@ -93,7 +90,7 @@ export default function NotFound() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            {t("description")}
+            The page you are looking for does not exist.
           </motion.p>
 
           <motion.div
@@ -104,7 +101,7 @@ export default function NotFound() {
             <Button asChild variant="default" className="px-6" size="lg">
               <Link href="/">
                 <HomeIcon className="w-4 h-4 mr-2" />
-                {t("go_home")}
+                Go back to home
               </Link>
             </Button>
           </motion.div>

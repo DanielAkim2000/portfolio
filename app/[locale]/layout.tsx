@@ -1,23 +1,12 @@
 import type { Metadata } from "next";
-import { Ubuntu_Sans } from "next/font/google";
-import "@/app/globals.css";
-import { ThemeProvider } from "@/components/theme/theme-provider";
 import Header from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { Toaster } from "@/components/ui/sonner";
 import { TanstackProvider } from "@/components/provider/tanstack.provider";
-
-const ubuntuSans = Ubuntu_Sans({
-  variable: "--font-ubuntu-sans",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
-
+import MajHtml from "@/components/maj-html/maj-html";
 export const metadata: Metadata = {
   title: "Portfolio",
   description: "Portfolio de Akim Emane",
@@ -31,40 +20,30 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const messages = await getMessages();
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${ubuntuSans.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TanstackProvider dehydratedState={null}>
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              <Header />
-              <main className="xl:max-w-7xl max-w-6xl mx-auto px-4 xl:px-0 ">
-                {children}
-              </main>
-              <Footer />
-
-              <Toaster
-                toastOptions={{
-                  className:
-                    "bg-white/50 dark:!bg-slate-900/50 backdrop-blur-sm z-50",
-                  style: {
-                    backdropFilter: "blur(20px)",
-                    WebkitBackdropFilter: "blur(20px)",
-                  },
-                }}
-                closeButton
-                position="top-right"
-              />
-            </NextIntlClientProvider>
-          </TanstackProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+    <TanstackProvider dehydratedState={null}>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <Header />
+        <main className="xl:max-w-7xl max-w-6xl mx-auto px-4 xl:px-0 ">
+          {children}
+        </main>
+        <Footer />
+        <Toaster
+          toastOptions={{
+            className:
+              "bg-white/50 dark:!bg-slate-900/50 backdrop-blur-sm z-50",
+            style: {
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            },
+          }}
+          closeButton
+          position="top-right"
+        />
+        <MajHtml />
+      </NextIntlClientProvider>
+    </TanstackProvider>
   );
 }
