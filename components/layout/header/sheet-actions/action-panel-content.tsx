@@ -10,23 +10,22 @@ import {
   CardReaction,
   CardShare,
   EmptyRecentActivity,
+  type CardData,
 } from "./card-actions-center";
 import { X } from "lucide-react";
 
 interface ActionPanelContentProps {
   locale: string | null;
   t: (key: string) => string;
-  isXl: boolean;
   isOpen: boolean;
   isLoading: boolean;
-  mergedData: any[];
+  mergedData: CardData[];
   setIsOpen: (value: boolean) => void;
 }
 
 export const ActionPanelContent = ({
   locale,
   t,
-  isXl,
   isOpen,
   isLoading,
   mergedData,

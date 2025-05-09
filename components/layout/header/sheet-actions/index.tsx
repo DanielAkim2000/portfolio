@@ -146,7 +146,7 @@ export const HeaderSheet = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, toggleFocusMode]);
+  }, [isOpen, toggleFocusMode, toggleTheme]);
 
   return (
     <>
@@ -190,7 +190,6 @@ export const HeaderSheet = () => {
                   <ActionPanelContent
                     locale={locale}
                     t={t}
-                    isXl={isXl}
                     isOpen={isOpen}
                     isLoading={isLoading}
                     mergedData={mergedData}
