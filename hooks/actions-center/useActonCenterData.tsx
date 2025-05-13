@@ -3,6 +3,9 @@ import { getAllShareOrViewKey, getIdFromKey } from "@/utils/localStorage";
 import { ReactionType } from "@/prisma/generated";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("useActionCenterData");
 
 // Clé de cache pour React Query
 const ACTION_CENTER_CACHE_KEY = ["action-center-data"];
@@ -75,24 +78,21 @@ export const useActionCenterData = ({
 
   // Fonction pour rafraîchir les données
   const mutate = useCallback(() => {
-    console.log("[useActionCenterData] mutate appelé");
+    logger.info("mutate appelé");
     // Mettre à jour les IDs immédiatement
     const freshIds = getLatestIds();
     setLatestIds(freshIds);
 
     // Invalider la requête pour forcer un rafraîchissement
     queryClient.invalidateQueries({ queryKey: ACTION_CENTER_CACHE_KEY });
-    console.log("[useActionCenterData] Query invalidée avec IDs:", freshIds);
+    logger.debug("Query invalidée avec IDs:", freshIds);
   }, [queryClient, getLatestIds]);
 
   // Effectuer la requête avec React Query
   const { data, error, isFetching } = useQuery<UnifiedActionCenterResponse>({
     queryKey: ACTION_CENTER_CACHE_KEY,
     queryFn: async () => {
-      console.log(
-        "[useActionCenterData] Exécution de la requête avec IDs:",
-        latestIds
-      );
+      logger.debug("Exécution de la requête avec IDs:", latestIds);
       const response = await fetch(
         `/api/action-center?ids=${latestIds.join(",")}`
       );
@@ -109,7 +109,7 @@ export const useActionCenterData = ({
   // Initialiser les IDs au montage du composant
   useEffect(() => {
     const ids = getLatestIds();
-    console.log("[useActionCenterData] Initialisation avec IDs:", ids);
+    logger.info("Initialisation avec IDs:", ids);
     setLatestIds(ids);
   }, [getLatestIds]);
 

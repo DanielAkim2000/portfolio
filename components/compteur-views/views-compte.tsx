@@ -3,6 +3,9 @@
 import { viewsBlog } from "@/actions/views-blog";
 import { viewsProject } from "@/actions/views-project";
 import { useEffect, useRef } from "react";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("ViewsCompte");
 
 interface ViewsCompteProps {
   id: string;
@@ -30,7 +33,7 @@ const ViewsCompte = (props: ViewsCompteProps) => {
 
     // Vérification de sécurité pour les props invalides
     if (viewKey === "undefined_undefined_viewed" || !props.id || !props.type) {
-      console.log("[ViewsCompte] Props invalides, annulation");
+      logger.warn("Props invalides, annulation");
       return;
     }
 
@@ -51,8 +54,8 @@ const ViewsCompte = (props: ViewsCompteProps) => {
       if (hoursSinceLastView >= INTERVAL_HOURS) {
         shouldIncrementView = true;
       } else {
-        console.log(
-          `[ViewsCompte] Dernière vue trop récente (${hoursSinceLastView.toFixed(
+        logger.debug(
+          `Dernière vue trop récente (${hoursSinceLastView.toFixed(
             2
           )}h), pas d'incrémentation`
         );
@@ -68,11 +71,7 @@ const ViewsCompte = (props: ViewsCompteProps) => {
     // Si on doit incrémenter, appeler l'API
     if (shouldIncrementView) {
       const updateView = async () => {
-        console.log(
-          "[ViewsCompte] Incrémentation de la vue pour",
-          props.type,
-          props.id
-        );
+        logger.info("Incrémentation de la vue pour", props.type, props.id);
 
         try {
           if (props.type === "project") {
@@ -81,10 +80,7 @@ const ViewsCompte = (props: ViewsCompteProps) => {
             await viewsBlog(props.id);
           }
         } catch (error) {
-          console.error(
-            "[ViewsCompte] Erreur lors de l'incrémentation:",
-            error
-          );
+          logger.error("Erreur lors de l'incrémentation:", error);
         }
       };
 

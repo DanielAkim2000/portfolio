@@ -2,9 +2,12 @@
 
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("views-project");
 
 export async function viewsProject(id: string) {
-  console.log(`[views-project] Enregistrement d'une vue pour le projet ${id}`);
+  logger.info(`Enregistrement d'une vue pour le projet ${id}`);
 
   try {
     const updatedProject = await prisma.project.update({
@@ -12,9 +15,7 @@ export async function viewsProject(id: string) {
       data: { views: { increment: 1 } },
     });
 
-    console.log(
-      `[views-project] Vue enregistrée avec succès, total: ${updatedProject.views}`
-    );
+    logger.debug(`Vue enregistrée avec succès, total: ${updatedProject.views}`);
 
     // Revalider les données pour que les changements soient visibles
     revalidateTag(`project-${id}`);
@@ -24,10 +25,7 @@ export async function viewsProject(id: string) {
       views: updatedProject.views,
     };
   } catch (error) {
-    console.error(
-      `[views-project] Erreur lors de l'enregistrement de la vue:`,
-      error
-    );
+    logger.error(`Erreur lors de l'enregistrement de la vue:`, error);
     return {
       success: false,
       message: "Error updating project",

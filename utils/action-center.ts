@@ -5,6 +5,9 @@ import {
   isDateInLast24Hours,
 } from "./localStorage";
 import { ReactionType } from "@/prisma/generated";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("action-center");
 
 /**
  * Vérifie si une date est dans les dernières 24 heures
@@ -24,9 +27,9 @@ export const addOtherDataToFetchViewsData = (data: {
     }[];
   };
 }) => {
-  console.log("[action-center] Traitement des données de vues");
+  logger.info("Traitement des données de vues");
   const viewsKeys = getAllViewsKey();
-  console.log("[action-center] Clés de vues trouvées:", viewsKeys.length);
+  logger.debug("Clés de vues trouvées:", viewsKeys.length);
 
   let dataWithOtherData: {
     [key: string]: {
@@ -41,9 +44,7 @@ export const addOtherDataToFetchViewsData = (data: {
 
   Object.keys(data).forEach((key) => {
     const views = viewsKeys.filter((view) => view.includes(key));
-    console.log(
-      `[action-center] Pour l'ID ${key}, ${views.length} vues trouvées`
-    );
+    logger.debug(`Pour l'ID ${key}, ${views.length} vues trouvées`);
 
     views.forEach((view) => {
       const dateStr = extractDateFromKey(view);
@@ -53,15 +54,13 @@ export const addOtherDataToFetchViewsData = (data: {
           model: view.includes("blog") ? "Blog" : "Project",
           createdAt: new Date(dateStr),
         };
-        console.log(
-          `[action-center] Vue ajoutée pour ${key}, date: ${dateStr}`
-        );
+        logger.debug(`Vue ajoutée pour ${key}, date: ${dateStr}`);
       }
     });
   });
 
-  console.log(
-    "[action-center] Données de vues traitées:",
+  logger.info(
+    "Données de vues traitées:",
     Object.keys(dataWithOtherData).length
   );
   return dataWithOtherData;
@@ -78,9 +77,9 @@ export const addOtherDataToFetchShareData = (data: {
     }[];
   };
 }) => {
-  console.log("[action-center] Traitement des données de partage");
+  logger.info("Traitement des données de partage");
   const sharesKeys = getAllShareKey();
-  console.log("[action-center] Clés de partage trouvées:", sharesKeys.length);
+  logger.debug("Clés de partage trouvées:", sharesKeys.length);
 
   let dataWithOtherData: {
     [key: string]: {
@@ -95,9 +94,7 @@ export const addOtherDataToFetchShareData = (data: {
 
   Object.keys(data).forEach((key) => {
     const shares = sharesKeys.filter((share) => share.includes(key));
-    console.log(
-      `[action-center] Pour l'ID ${key}, ${shares.length} partages trouvés`
-    );
+    logger.debug(`Pour l'ID ${key}, ${shares.length} partages trouvés`);
 
     shares.forEach((share) => {
       const dateStr = extractDateFromKey(share);
@@ -107,15 +104,13 @@ export const addOtherDataToFetchShareData = (data: {
           model: share.includes("blog") ? "Blog" : "Project",
           createdAt: new Date(dateStr),
         };
-        console.log(
-          `[action-center] Partage ajouté pour ${key}, date: ${dateStr}`
-        );
+        logger.debug(`Partage ajouté pour ${key}, date: ${dateStr}`);
       }
     });
   });
 
-  console.log(
-    "[action-center] Données de partage traitées:",
+  logger.info(
+    "Données de partage traitées:",
     Object.keys(dataWithOtherData).length
   );
   return dataWithOtherData;
@@ -137,7 +132,7 @@ export const filterReactionsDataIn24h = (data: {
     }[];
   };
 }) => {
-  console.log("[action-center] Filtrage des réactions des dernières 24h");
+  logger.info("Filtrage des réactions des dernières 24h");
 
   // Créer un objet qui va contenir les entrées filtrées
   const dataFiltered: {
@@ -168,16 +163,11 @@ export const filterReactionsDataIn24h = (data: {
         model,
         types: recentTypes,
       };
-      console.log(
-        `[action-center] ${recentTypes.length} réactions récentes pour ${key}`
-      );
+      logger.debug(`${recentTypes.length} réactions récentes pour ${key}`);
     }
   });
 
-  console.log(
-    "[action-center] Réactions filtrées:",
-    Object.keys(dataFiltered).length
-  );
+  logger.info("Réactions filtrées:", Object.keys(dataFiltered).length);
   return dataFiltered;
 };
 
@@ -197,7 +187,7 @@ export const convertReactionsForMerge = (data: {
     }[];
   };
 }) => {
-  console.log("[action-center] Conversion des réactions pour la fusion");
+  logger.info("Conversion des réactions pour la fusion");
 
   const convertedData: {
     [key: string]: {
@@ -233,14 +223,14 @@ export const convertReactionsForMerge = (data: {
         allTypes: types, // Conserver tous les types pour référence
       };
 
-      console.log(
-        `[action-center] Réaction convertie pour ${key}, type principal: ${sortedTypes[0].type}`
+      logger.debug(
+        `Réaction convertie pour ${key}, type principal: ${sortedTypes[0].type}`
       );
     }
   });
 
-  console.log(
-    "[action-center] Données de réactions converties:",
+  logger.info(
+    "Données de réactions converties:",
     Object.keys(convertedData).length
   );
   return convertedData;
@@ -284,12 +274,10 @@ export const mergeData = (
     };
   }
 ) => {
-  console.log("[action-center] Fusion des données");
-  console.log(
-    `[action-center] - Réactions: ${Object.keys(reactionsData).length}`
-  );
-  console.log(`[action-center] - Partages: ${Object.keys(sharesData).length}`);
-  console.log(`[action-center] - Vues: ${Object.keys(viewsData).length}`);
+  logger.info("Fusion des données");
+  logger.debug(`- Réactions: ${Object.keys(reactionsData).length}`);
+  logger.debug(`- Partages: ${Object.keys(sharesData).length}`);
+  logger.debug(`- Vues: ${Object.keys(viewsData).length}`);
 
   // Convertir les réactions pour la fusion
   const processedReactionsData = convertReactionsForMerge(reactionsData);
@@ -304,9 +292,7 @@ export const mergeData = (
     id: key,
   }));
   mergedData.push(...reactionsItems);
-  console.log(
-    `[action-center] ${reactionsItems.length} éléments de réactions ajoutés`
-  );
+  logger.debug(`${reactionsItems.length} éléments de réactions ajoutés`);
 
   // Ajouter les partages avec le type correct
   const sharesItems = Object.keys(sharesData).map((key) => ({
@@ -315,9 +301,7 @@ export const mergeData = (
     id: key,
   }));
   mergedData.push(...sharesItems);
-  console.log(
-    `[action-center] ${sharesItems.length} éléments de partages ajoutés`
-  );
+  logger.debug(`${sharesItems.length} éléments de partages ajoutés`);
 
   // Ajouter les vues avec le type correct
   const viewsItems = Object.keys(viewsData).map((key) => ({
@@ -326,15 +310,13 @@ export const mergeData = (
     id: key,
   }));
   mergedData.push(...viewsItems);
-  console.log(`[action-center] ${viewsItems.length} éléments de vues ajoutés`);
+  logger.debug(`${viewsItems.length} éléments de vues ajoutés`);
 
   // Tri des données par date (plus récentes en premier)
   const sortedData = mergedData.sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
-  console.log(
-    `[action-center] Total après fusion: ${sortedData.length} éléments`
-  );
+  logger.info(`Total après fusion: ${sortedData.length} éléments`);
   return sortedData;
 };

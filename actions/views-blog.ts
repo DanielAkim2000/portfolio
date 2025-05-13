@@ -2,9 +2,12 @@
 
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("views-blog");
 
 export async function viewsBlog(id: string) {
-  console.log(`[views-blog] Enregistrement d'une vue pour le blog ${id}`);
+  logger.info(`Enregistrement d'une vue pour le blog ${id}`);
 
   try {
     const updatedBlog = await prisma.blog.update({
@@ -12,9 +15,7 @@ export async function viewsBlog(id: string) {
       data: { views: { increment: 1 } },
     });
 
-    console.log(
-      `[views-blog] Vue enregistrée avec succès, total: ${updatedBlog.views}`
-    );
+    logger.debug(`Vue enregistrée avec succès, total: ${updatedBlog.views}`);
 
     // Revalider les données pour que les changements soient visibles
     revalidateTag(`blog-${id}`);
@@ -24,6 +25,7 @@ export async function viewsBlog(id: string) {
       views: updatedBlog.views,
     };
   } catch (error) {
+    logger.error(`Erreur lors de l'enregistrement de la vue:`, error);
     return {
       success: false,
       message: "Error updating blog",

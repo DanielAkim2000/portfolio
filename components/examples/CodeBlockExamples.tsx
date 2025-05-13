@@ -12,7 +12,7 @@ export function CodeBlockExamples() {
 
 // Calculate the 10th Fibonacci number
 const result = fibonacci(10);
-console.log(result); // 55`;
+// Le résultat est 55`;
 
   // TypeScript example
   const tsCode = `interface User {
@@ -33,7 +33,7 @@ const currentUser: User = {
   isActive: true
 };
 
-console.log(getUserInfo(currentUser));`;
+// Affiche les informations utilisateur`;
 
   // Python example
   const pythonCode = `def quick_sort(arr):

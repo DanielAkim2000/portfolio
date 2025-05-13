@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { HomeIcon, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("error-boundary");
 
 export default function Error({
   error,
@@ -17,7 +20,7 @@ export default function Error({
   const t = useTranslations("error");
 
   useEffect(() => {
-    console.error(error);
+    logger.error("Erreur d'application détectée:", error);
   }, [error]);
 
   return (

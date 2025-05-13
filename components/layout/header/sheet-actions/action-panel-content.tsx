@@ -13,6 +13,9 @@ import {
   type CardData,
 } from "./card-actions-center";
 import { X } from "lucide-react";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("HeaderSheet");
 
 interface ActionPanelContentProps {
   locale: string | null;
@@ -72,11 +75,7 @@ export const ActionPanelContent = ({
               <>
                 {mergedData.length > 0 ? (
                   mergedData.map((data) => {
-                    console.log(
-                      "[HeaderSheet] Rendu item:",
-                      data.typeData,
-                      data.id
-                    );
+                    logger.debug("Rendu item:", data.typeData, data.id);
 
                     if (data.typeData === "reaction") {
                       return (
