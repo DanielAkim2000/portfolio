@@ -4,45 +4,40 @@ FROM node:20-alpine AS builder
 # Installer pnpm globalement
 RUN npm install -g pnpm
 
-# Définir le répertoire de travail
+# Créer le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de package et lock
+# Copier uniquement les fichiers nécessaires à l'installation
 COPY package.json pnpm-lock.yaml ./
 
-# Installer les dépendances
+# Installer les dépendances (en mode production=false pour avoir prisma et next)
 RUN pnpm install
 
-# Copier le reste des fichiers
+# Copier le reste du code
 COPY . .
 
-# Générer le client Prisma et build Next.js
+# Générer le client Prisma et build du projet Next.js
 RUN npx prisma generate
 RUN pnpm build
 
-# Étape 2 : Runner
-FROM node:20-alpine
+# Étape 2 : Runner (image légère)
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
 # Installer pnpm globalement
 RUN npm install -g pnpm
 
-# Copier uniquement ce dont on a besoin pour l'exécution
+# Copier uniquement ce qu’il faut pour exécuter
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
-
-# Copier les fichiers build depuis l'étape builder
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
 
-# Définir la variable d'environnement pour Next.js
+# Définir la variable d'environnement
 ENV NODE_ENV=production
-
-# Exposer le port utilisé par Next.js
 EXPOSE 3000
 
-# Commande pour lancer l'application
+# Lancer Next.js en production
 CMD ["pnpm", "start"]
