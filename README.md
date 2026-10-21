@@ -34,7 +34,7 @@ Mon portfolio de développeur : projets, blog et notes « TIL » (Today I Learne
 
 🗄️ **Back-end** : Server Actions Next.js, Prisma 6, PostgreSQL
 
-🚢 **Déploiement** : Docker et Docker Compose
+🚢 **Déploiement** : Docker (build multi-étapes, image Node 20 Alpine)
 
 ## 🚀 Lancer le projet en local
 
@@ -72,7 +72,12 @@ Le site est alors disponible sur http://localhost:3000.
 
 ## 🐳 Docker
 
-Le fichier `docker-compose.yml` lance PostgreSQL et l'application Next.js. Les chemins de volumes y sont propres à ma machine : à adapter avant de l'utiliser.
+Le `Dockerfile` construit l'application en deux étapes (build, puis image d'exécution légère basée sur Node 20 Alpine). La variable `DATABASE_URL` est fournie au lancement du conteneur :
+
+```bash
+docker build -t portfolio .
+docker run -p 3000:3000 --env-file .env portfolio
+```
 
 ## 👤 Auteur
 
