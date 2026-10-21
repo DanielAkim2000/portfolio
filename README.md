@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Mon portfolio de développeur : projets, blog et notes « TIL » (Today I Learned) avec extraits de code. Site multilingue, avec un contenu facile à enrichir depuis la base de données.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+## ✨ Fonctionnalités
+
+📁 **Projets** : fiches projet avec images, liens, description et titres traduits par langue
+
+📝 **Blog** : articles avec épinglage, images et lieu
+
+💡 **TIL** : notes courtes avec extrait de code, langage, tags et lien vers la documentation
+
+👏 **Réactions** : trois réactions (applaudir, réfléchir, impressionné) par visiteur, avec compteurs de vues et de partages
+
+🌍 **Internationalisation** avec next-intl, contenus stockés par langue
+
+🌗 **Thème clair / sombre** avec next-themes
+
+🎞️ **Animations** avec Framer Motion et Lottie, contenu riche en MDX
+
+## 🧱 Stack technique
+
+⚛️ **Front-end** : Next.js 15 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4, Radix UI, shadcn/ui, lucide-react
+
+🧠 **État et données** : TanStack Query, Zustand, React Hook Form, Zod
+
+🗄️ **Back-end** : Server Actions Next.js, Prisma 6, PostgreSQL
+
+🚢 **Déploiement** : Docker et Docker Compose
+
+## 🚀 Lancer le projet en local
+
+Prérequis : Node.js, pnpm et une base PostgreSQL.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Créer un fichier `.env` à la racine avec au minimum l'URL de la base :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+DATABASE_URL="postgresql://utilisateur:motdepasse@localhost:5432/portfolio"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Générer le client Prisma, appliquer les migrations puis démarrer :
 
-## Learn More
+```bash
+pnpm prisma:generate:prod
+pnpm prisma:migrate:prod
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Le site est alors disponible sur http://localhost:3000.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧰 Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`pnpm dev` : serveur de développement (Turbopack)
 
-## Deploy on Vercel
+`pnpm build` puis `pnpm start` : build et serveur de production
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`pnpm lint` : analyse ESLint
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`pnpm prisma:studio` : interface Prisma pour parcourir la base
+
+## 🐳 Docker
+
+Le fichier `docker-compose.yml` lance PostgreSQL et l'application Next.js. Les chemins de volumes y sont propres à ma machine : à adapter avant de l'utiliser.
+
+## 👤 Auteur
+
+**Daniel Akim**, développeur web & IA basé à Cergy-Pontoise.
+
+[Mon profil GitHub](https://github.com/DanielAkim2000)
