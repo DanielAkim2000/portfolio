@@ -6,7 +6,7 @@ import StickySidebar from "@/components/sidebar/sticky-sidebar";
 import { StickyBarWrapper } from "@/components/wrapper/sticky-bar-wrapper";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getContentFromBlog, getTitleFromContentMdx } from "@/lib/mdx-utils";
-import { Title } from "@/prisma/generated";
+import { Title } from "@/prisma/generated/client";
 import { Metadata } from "next";
 
 const getBlog = async (id: string) => {

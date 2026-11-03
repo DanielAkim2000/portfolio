@@ -13,20 +13,16 @@ const SectionCardDevOps1 = () => {
     <div className="flex-1">
       <div className="px-6 md:px-12 ml-auto mr-auto max-w-[75rem] mb-6">
         <TitleBlock
-          title={t("backend")}
-          subtitle={t("resilient_modular_high_performance_architecture")}
-          description={t(
-            "build_robust_systems_with_clean_logic_optimized_for_speed_scalability_and_security"
-          )}
+          title={t("foundations_title")}
+          subtitle={t("foundations_subtitle")}
+          description={t("foundations_description")}
         />
       </div>
       <div className="flex flex-col gap-4 mb-6">
         <BaseCard
           index={0}
-          title={t("architecture")}
-          description={t(
-            "modular_layered_architecture_ensuring_maintainability_and_reusability"
-          )}
+          title={t("card_algorithms")}
+          description={t("card_algorithms_description")}
           isClicked={isClicked[0]}
           setIsClicked={() =>
             handleClick({
@@ -38,10 +34,8 @@ const SectionCardDevOps1 = () => {
         />
         <BaseCard
           index={1}
-          title={t("data_flow")}
-          description={t(
-            "efficient_api_and_database_interaction_with_clean_request_response_handling"
-          )}
+          title={t("card_memory_systems")}
+          description={t("card_memory_systems_description")}
           isClicked={isClicked[1]}
           setIsClicked={() =>
             handleClick({
@@ -53,10 +47,8 @@ const SectionCardDevOps1 = () => {
         />
         <BaseCard
           index={2}
-          title={t("security")}
-          description={t(
-            "input_validation_encryption_and_auth_protocols_to_protect_data_and_services"
-          )}
+          title={t("card_concurrency")}
+          description={t("card_concurrency_description")}
           isClicked={isClicked[2]}
           setIsClicked={() =>
             handleClick({
@@ -68,10 +60,8 @@ const SectionCardDevOps1 = () => {
         />
         <BaseCard
           index={3}
-          title={t("performance")}
-          description={t(
-            "optimized_queries_caching_and_async_processes_for_lightning_fast_execution"
-          )}
+          title={t("card_code_quality")}
+          description={t("card_code_quality_description")}
           isClicked={isClicked[3]}
           setIsClicked={() =>
             handleClick({
@@ -94,20 +84,16 @@ const SectionCardDevOps2 = () => {
     <div className="flex-1">
       <div className="px-6 md:px-12 ml-auto mr-auto max-w-[75rem] mb-6">
         <TitleBlock
-          title="DevOps (En apprentissage)"
-          subtitle={t("infrastructure_as_code_with_seamless_ci_cd")}
-          description={t(
-            "emphasizing_automation_monitoring_and_reliability_to_ensure_smooth_deployments_and_maintain_high_system_uptime"
-          )}
+          title={t("web_apps_title")}
+          subtitle={t("web_apps_subtitle")}
+          description={t("web_apps_description")}
         />
       </div>
       <div className="flex flex-col gap-4 mb-6">
         <BaseCard
           index={0}
-          title={t("infrastructure_as_code")}
-          description={t(
-            "declarative_configurations_using_tools_like_terraform_or_cloudformation"
-          )}
+          title={t("card_modern_ui")}
+          description={t("card_modern_ui_description")}
           isClicked={isClicked[0]}
           setIsClicked={() =>
             handleClick({
@@ -119,10 +105,8 @@ const SectionCardDevOps2 = () => {
         />
         <BaseCard
           index={1}
-          title={t("ci_cd_pipelines")}
-          description={t(
-            "automated_testing_build_and_deployment_for_rapid_delivery_cycles"
-          )}
+          title={t("card_mobile_apps")}
+          description={t("card_mobile_apps_description")}
           isClicked={isClicked[1]}
           setIsClicked={() =>
             handleClick({
@@ -134,10 +118,8 @@ const SectionCardDevOps2 = () => {
         />
         <BaseCard
           index={2}
-          title={t("monitoring")}
-          description={t(
-            "logging_alerting_and_metrics_tracking_for_system_reliability"
-          )}
+          title={t("card_apis_services")}
+          description={t("card_apis_services_description")}
           isClicked={isClicked[2]}
           setIsClicked={() =>
             handleClick({
@@ -149,10 +131,8 @@ const SectionCardDevOps2 = () => {
         />
         <BaseCard
           index={3}
-          title={t("scalability")}
-          description={t(
-            "cloud_native_tools_and_container_orchestration_for_on_demand_scaling"
-          )}
+          title={t("card_web_craft")}
+          description={t("card_web_craft_description")}
           isClicked={isClicked[3]}
           setIsClicked={() =>
             handleClick({

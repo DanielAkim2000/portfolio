@@ -6,7 +6,7 @@ import Link from "next/link";
 import CountUp from "react-countup";
 import { motion } from "framer-motion";
 import { useLocale } from "next-intl";
-import { Blog, Title } from "@/prisma/generated";
+import { Blog, Title } from "@/prisma/generated/browser";
 
 export type SectionPostsProps = {
   blogs: (Blog & { title: Title[] })[];

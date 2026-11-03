@@ -5,6 +5,7 @@ import {
   SectionCardDevOps2,
 } from "@/components/sections/home/devops.section";
 import { HomeSectionsMe } from "@/components/sections/home/me.sections";
+import { Section42Highlights } from "@/components/sections/home/forty-two.section";
 import { getTranslations } from "next-intl/server";
 import { Metadata } from "next";
 
@@ -13,9 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Akim Emane - Portfolio",
-    description: `${t("i'm")} Akim Emane, ${t("full_stack_developer")} ${t(
-      "passionate_about_it"
-    )}`,
+    description: `${t("i'm")} Akim Emane, ${t("profile_title")} ${t(
+      "school_42_student"
+    )}. ${t("hero_description")}`,
   };
 }
 
@@ -55,6 +56,7 @@ export default async function HomePage() {
     <div className="">
       <HomeSectionsMe />
       <TextCoffee t={t} />
+      <Section42Highlights />
       <div className="flex flex-col lg:flex-row lg:gap-4 mb-20">
         <SectionCardDevOps1 />
         <SectionCardDevOps2 />
@@ -62,11 +64,11 @@ export default async function HomePage() {
       <div className="flex flex-col gap-10 lg:gap-20">
         <div>
           <TitleBlock
-            title={t("secure_and_reliable")}
-            subtitle={t(
-              "structured_logic_with_focus_on_performance_and_security"
+            title={t("robust_and_scalable")}
+            subtitle={t("structured_logic_with_focus_on_performance_and_security")}
+            description={t(
+              "designing_modular_secure_apis_with_scalable_architecture_prioritizing_clean_code_and_efficient_data_flow"
             )}
-            description={t("secure_and_reliable_description")}
           />
         </div>
         <div>

@@ -1,5 +1,5 @@
 import CardTil from "@/components/card/til/card-til";
-import { Til, Title } from "@/prisma/generated";
+import { Til, Title } from "@/prisma/generated/browser";
 import { useLocale } from "next-intl";
 import { type SerializeResult } from "next-mdx-remote-client/serialize";
 

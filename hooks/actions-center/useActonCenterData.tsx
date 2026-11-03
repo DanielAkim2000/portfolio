@@ -1,6 +1,6 @@
 import { UnifiedActionCenterResponse } from "@/actions/get-unified-action-center-data";
 import { getAllShareOrViewKey, getIdFromKey } from "@/utils/localStorage";
-import { ReactionType } from "@/prisma/generated";
+import { ReactionType } from "@/prisma/generated/browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { createLogger } from "@/utils/logger";

@@ -10,7 +10,7 @@ import { AreaChartIcon } from "lucide-react";
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
 import { useSettings } from "@/zustand/settings.store";
 import { cn } from "@/lib/utils";
-import { Reaction, ReactionType } from "@/prisma/generated";
+import { Reaction, ReactionType } from "@/prisma/generated/browser";
 import {
   CardReactionItem,
   CardShareItem,

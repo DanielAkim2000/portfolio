@@ -2,12 +2,13 @@ import { getProject as getProjectAction } from "@/actions/get-project";
 import { AnimatedTitleBlock } from "@/components/animated/title-block.animated";
 import ViewsCompte from "@/components/compteur-views/views-compte";
 import ReactionBar from "@/components/bar/reaction.bar";
+import { ProjectRunner } from "@/components/projects/project-runner";
 import StickySidebar from "@/components/sidebar/sticky-sidebar";
 import { Button } from "@/components/ui/button";
 import { StickyBarWrapper } from "@/components/wrapper/sticky-bar-wrapper";
 import TitleBlockWrapper from "@/components/wrapper/title-block.wrapper";
 import { getContentFromProject, getTitleFromContentMdx } from "@/lib/mdx-utils";
-import { Content, Title } from "@/prisma/generated";
+import { Content, Title } from "@/prisma/generated/client";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Globe } from "lucide-react";
@@ -134,6 +135,20 @@ export default async function ProjectPage({
             </Link>
           </Button>
         )}
+        {project.makable &&
+          project.githubLink[0] &&
+          project.runnerLanguage &&
+          (project.runnerLanguage === "c" ||
+            project.runnerLanguage === "cpp") &&
+          project.runnerGithubFiles.length > 0 && (
+            <ProjectRunner
+              githubUrl={project.githubLink[0]}
+              language={project.runnerLanguage}
+              branch={project.runnerGithubBranch ?? "main"}
+              files={project.runnerGithubFiles}
+              sampleStdin={project.runnerSampleStdin}
+            />
+          )}
       </div>
       <StickyBarWrapper>
         <div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { BaseCard, handleClick } from "@/components/card/base.card";
-import { Content, Project, Title } from "@/prisma/generated";
+import { Content, Project, Title } from "@/prisma/generated/browser";
 import { useState } from "react";
 
 export type SectionProjectsProps = {

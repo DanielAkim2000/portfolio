@@ -5,7 +5,6 @@ import { FileTextIcon } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import {
   ExpoIcon,
-  ExpressIcon,
   FigmaIcon,
   NestIcon,
   NextIcon,
@@ -84,16 +83,26 @@ export const HomeSectionsMe = () => {
               </div>
 
               <motion.p
-                className="text-lg md:text-xl tracking-tight max-w-sm md:max-w-lg whitespace-pre-wrap mb-10"
+                className="text-lg md:text-xl tracking-tight max-w-sm md:max-w-2xl whitespace-pre-wrap mb-4"
                 variants={item}
               >
                 <span className="dark:opacity-60">{t("a")} </span>
                 <span className="opacity-100">
-                  {t("full_stack_developer")},{" "}
+                  {t("profile_title")},{" "}
+                </span>
+                <span className="opacity-100 text-primary">
+                  {t("school_42_student")}
                 </span>
                 <span className="dark:opacity-60">
-                  {t("passionate_about_it")}
+                  , {t("passionate_about_it")}
                 </span>
+              </motion.p>
+
+              <motion.p
+                className="text-base md:text-lg tracking-tight max-w-sm md:max-w-2xl text-muted-foreground mb-10"
+                variants={item}
+              >
+                {t("hero_description")}
               </motion.p>
 
               <motion.div
@@ -121,7 +130,6 @@ export const HomeSectionsMe = () => {
                 </span>
                 <div>
                   <div className="flex gap-3 mt-2 items-center">
-                    <ExpressIcon />
                     <NestIcon />
                     <ReactIcon />
                     <NextIcon />
@@ -138,8 +146,8 @@ export const HomeSectionsMe = () => {
               src="/kanekiken.png"
               alt="kanekiken"
               width={400}
-              height={400}
-              className="hidden lg:flex w-[400] h-[600] object-contain"
+              height={600}
+              className="hidden lg:flex object-contain"
               draggable={false}
               priority
               quality={100}

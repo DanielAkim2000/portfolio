@@ -18,7 +18,7 @@ export async function viewsProject(id: string) {
     logger.debug(`Vue enregistrée avec succès, total: ${updatedProject.views}`);
 
     // Revalider les données pour que les changements soient visibles
-    revalidateTag(`project-${id}`);
+    revalidateTag(`project-${id}`, "max");
     return {
       success: true,
       message: "Project updated",

@@ -1,4 +1,4 @@
-import { Reaction, ReactionType } from "@/prisma/generated";
+import { Reaction, ReactionType } from "@/prisma/generated/browser";
 
 /**
  * Compte le nombre de réactions d'un type spécifique

@@ -75,20 +75,12 @@ export default async function SkillsToolsPage() {
       paragraph: t("nodejs_paragraph"),
     },
     {
-      title: "Express.js",
-      paragraph: t("expressjs_paragraph"),
-    },
-    {
-      title: "Nest.js",
+      title: t("card_apis_services"),
       paragraph: t("nestjs_paragraph"),
     },
     {
-      title: "PHP",
-      paragraph: t("php_paragraph"),
-    },
-    {
-      title: "Symfony",
-      paragraph: t("symfony_paragraph"),
+      title: t("other_technologies_title"),
+      paragraph: t("other_technologies_paragraph"),
     },
   ];
 

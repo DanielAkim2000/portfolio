@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ReactionType } from "@/prisma/generated";
+import { ReactionType } from "@/prisma/generated/client";
 
 export type UnifiedActionCenterResponse = {
   reactions: {

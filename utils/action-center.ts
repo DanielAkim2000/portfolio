@@ -4,7 +4,7 @@ import {
   extractDateFromKey,
   isDateInLast24Hours,
 } from "./localStorage";
-import { ReactionType } from "@/prisma/generated";
+import { ReactionType } from "@/prisma/generated/client";
 import { createLogger } from "@/utils/logger";
 
 const logger = createLogger("action-center");

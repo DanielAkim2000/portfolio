@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, ReactionType } from "@/prisma/generated";
+import { Prisma, ReactionType } from "@/prisma/generated/client";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -26,7 +26,7 @@ export async function addReactionBlog(
         },
       },
     });
-    revalidateTag(`blog-${blogId}`);
+    revalidateTag(`blog-${blogId}`, "max");
     return { message: "reaction_added" };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

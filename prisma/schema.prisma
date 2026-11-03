@@ -5,13 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../prisma/generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -76,17 +75,22 @@ model Content {
 }
 
 model Project {
-  id          String     @id @default(uuid())
-  title       Title[]
-  link        String?
-  githubLink  String[]
-  images      String[]
-  description Content[]
-  nbShares    Int        @default(0)
-  views       Int        @default(0)
-  reactions   Reaction[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id                 String     @id @default(uuid())
+  title              Title[]
+  link               String?
+  githubLink         String[]
+  images             String[]
+  description        Content[]
+  nbShares           Int        @default(0)
+  views              Int        @default(0)
+  reactions          Reaction[]
+  makable            Boolean    @default(false)
+  runnerLanguage     String?
+  runnerGithubBranch String?    @default("main")
+  runnerGithubFiles  String[]   @default([])
+  runnerSampleStdin  String?    @db.Text
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 }
 
 model Blog {

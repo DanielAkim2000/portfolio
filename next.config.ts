@@ -10,11 +10,11 @@ const withMDX = createMDX({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
   allowedDevOrigins: ["http://localhost", "http://192.168.1.10"],
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx", "json"],
-  // Note: La configuration i18n dans next.config est obsolète avec l'App Router
-  // Nous utilisons le middleware et le plugin next-intl à la place
+  images: {
+    qualities: [75, 100],
+  },
 };
 
 export default withNextIntl(withMDX(nextConfig));

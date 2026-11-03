@@ -18,7 +18,7 @@ export async function viewsBlog(id: string) {
     logger.debug(`Vue enregistrée avec succès, total: ${updatedBlog.views}`);
 
     // Revalider les données pour que les changements soient visibles
-    revalidateTag(`blog-${id}`);
+    revalidateTag(`blog-${id}`, "max");
     return {
       success: true,
       message: "Blog updated",

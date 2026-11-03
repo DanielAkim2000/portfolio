@@ -11,7 +11,7 @@ export async function shareProject(projectId: string) {
         nbShares: { increment: 1 },
       },
     });
-    revalidateTag(`project-${projectId}`);
+    revalidateTag(`project-${projectId}`, "max");
     return { message: "Project shared" };
   } catch (error) {
     throw new Error("Error sharing project");

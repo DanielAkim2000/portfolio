@@ -11,7 +11,7 @@ export async function shareBlog(blogId: string) {
       },
     });
 
-    revalidateTag(`blog-${blogId}`);
+    revalidateTag(`blog-${blogId}`, "max");
     return { message: "Blog shared" };
   } catch (error) {
     throw new Error("Error sharing blog");
