@@ -26,6 +26,7 @@ export const projects = [
       fr: "Échecs 3D en temps réel contre un ami ou une IA, babyfoots physiques de 42 Paris organisés par l'application, chat, classement Elo et tournois. React 19, NestJS 11, PostgreSQL, Three.js.",
       en: "Real-time 3D chess against a friend or an AI, the physical foosball tables of 42 Paris organised by the app, chat, Elo ranking and tournaments. React 19, NestJS 11, PostgreSQL, Three.js.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/ft_transcendence"],
   },
   {
     title: { fr: "minishell", en: "minishell" },
@@ -37,6 +38,7 @@ export const projects = [
       fr: "Lexer, parser, expander et exécuteur : pipes, redirections, heredocs, opérateurs logiques, sous-shells, jokers et builtins.",
       en: "Lexer, parser, expander and executor: pipes, redirections, heredocs, logical operators, subshells, wildcards and builtins.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/minishell"],
   },
   {
     title: { fr: "ft_irc", en: "ft_irc" },
@@ -48,6 +50,7 @@ export const projects = [
       fr: "Serveur multi-clients basé sur epoll et des entrées-sorties non bloquantes : canaux, modes, invitations, messages privés.",
       en: "Multi-client server based on epoll and non-blocking I/O: channels, modes, invitations, private messages.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/ft_irc"],
   },
   {
     title: { fr: "cub3D", en: "cub3D" },
@@ -59,6 +62,7 @@ export const projects = [
       fr: "Un labyrinthe vu à la première personne façon Wolfenstein 3D : textures, minimap, portes, sprites animés et caméra à la souris.",
       en: "A first-person maze in the style of Wolfenstein 3D: textures, minimap, doors, animated sprites and mouse camera.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/cub3D"],
   },
   {
     title: { fr: "philosophers", en: "philosophers" },
@@ -70,6 +74,7 @@ export const projects = [
       fr: "Une simulation concurrente sans interblocage ni accès concurrent aux données, en deux versions : threads avec mutex, processus avec sémaphores.",
       en: "A concurrent simulation with no deadlock or data race, in two versions: threads with mutexes, processes with semaphores.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/philosophers"],
   },
   {
     title: { fr: "push_swap", en: "push_swap" },
@@ -93,6 +98,7 @@ export const projects = [
       fr: "Processus, pipes et redirections pour reproduire cmd1 | cmd2, avec plusieurs pipes et here_doc en bonus.",
       en: "Processes, pipes and redirections to reproduce cmd1 | cmd2, with multiple pipes and here_doc as a bonus.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/pipex"],
   },
   {
     title: { fr: "fractol", en: "fractol" },
@@ -104,6 +110,7 @@ export const projects = [
       fr: "Mandelbrot, Julia et Burning Ship, avec zoom à la molette, palettes de couleurs et profondeur d'itération adaptative.",
       en: "Mandelbrot, Julia and Burning Ship, with mouse-wheel zoom, colour palettes and adaptive iteration depth.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/fractol"],
   },
   {
     title: { fr: "Libft", en: "Libft" },
@@ -115,6 +122,7 @@ export const projects = [
       fr: "Les fonctions de la libc réimplémentées, des listes chaînées et des utilitaires que je réutilise dans tous mes projets.",
       en: "Reimplemented libc functions, linked lists and utilities I reuse in all my projects.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/libft-42"],
   },
   {
     title: { fr: "ft_printf", en: "ft_printf" },
@@ -126,6 +134,7 @@ export const projects = [
       fr: "Toutes les conversions de printf, plus les drapeaux, la largeur et la précision en bonus.",
       en: "All printf conversions, plus flags, width and precision as a bonus.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/ft_printf"],
   },
   {
     title: { fr: "get_next_line", en: "get_next_line" },
@@ -137,6 +146,7 @@ export const projects = [
       fr: "Une fonction qui renvoie une ligne à la fois grâce à une variable statique, avec la prise en charge de plusieurs descripteurs en bonus.",
       en: "A function that returns one line at a time using a static variable, with support for several descriptors as a bonus.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/get_next_line"],
   },
   {
     title: { fr: "CPP-Modules", en: "CPP-Modules" },
@@ -148,6 +158,18 @@ export const projects = [
       fr: "Classes, héritage, polymorphisme, exceptions, templates et STL, à travers dix modules d'exercices.",
       en: "Classes, inheritance, polymorphism, exceptions, templates and the STL, across ten modules of exercises.",
     },
+    githubLink: [
+      "https://github.com/DanielAkim2000/cpp00",
+      "https://github.com/DanielAkim2000/cpp01",
+      "https://github.com/DanielAkim2000/cpp02",
+      "https://github.com/DanielAkim2000/cpp03",
+      "https://github.com/DanielAkim2000/cpp04",
+      "https://github.com/DanielAkim2000/cpp05",
+      "https://github.com/DanielAkim2000/cpp06",
+      "https://github.com/DanielAkim2000/cpp07",
+      "https://github.com/DanielAkim2000/cpp08",
+      "https://github.com/DanielAkim2000/cpp09",
+    ],
   },
   {
     title: { fr: "inception", en: "inception" },
@@ -159,6 +181,7 @@ export const projects = [
       fr: "Trois services conteneurisés avec Docker Compose, un point d'entrée unique en TLS, des secrets et des volumes nommés.",
       en: "Three containerised services with Docker Compose, a single TLS entry point, secrets and named volumes.",
     },
+    githubLink: ["https://github.com/DanielAkim2000/inception"],
   },
 ];
 

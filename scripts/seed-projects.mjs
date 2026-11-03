@@ -43,6 +43,9 @@ try {
       if ("link" in p) {
         await client.query(`update "Project" set link = $1, "updatedAt" = now() where id = $2`, [p.link, projectId]);
       }
+      if (p.githubLink) {
+        await client.query(`update "Project" set "githubLink" = $1, "updatedAt" = now() where id = $2`, [p.githubLink, projectId]);
+      }
       console.log(`mis à jour : ${p.title.fr}`);
     } else {
       if (p.update) throw new Error(`${p.title.fr} devrait déjà exister en base`);

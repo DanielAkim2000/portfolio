@@ -21,7 +21,7 @@ const GithubButton = ({
 }: {
   variant?: "default" | "tertiary";
   href: string;
-  type: "Github" | "Backend" | "Frontend";
+  type: string;
 }) => {
   return (
     <Button variant={variant} size={"lg"} asChild>
@@ -123,7 +123,7 @@ export default async function ProjectPage({
                   ? index === 0
                     ? "Backend"
                     : "Frontend"
-                  : "Github"
+                  : (link.split("/").pop() ?? "Github").replace(/\.git$/, "")
               }
             />
           ))}
