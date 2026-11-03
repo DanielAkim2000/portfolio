@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         const emailKey = `login:email:${credentials.email.toLowerCase()}`;
         const keys = ip ? [emailKey, `login:ip:${ip}`] : [emailKey];
 
-        if (keys.some((key) => isRateLimited(key, MAX_LOGIN_ATTEMPTS, LOGIN_WINDOW_MS))) {
+        if (keys.some((key) => isRateLimited(key, MAX_LOGIN_ATTEMPTS))) {
           return null;
         }
 
@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
 
         const isValid = await compare(
           credentials.password,
-          user?.password ?? DUMMY_HASH
+          user?.password ?? DUMMY_HASH,
         );
 
         if (!user || !isValid) {

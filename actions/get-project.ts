@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("get-project");
 
 export async function getProject(id: string) {
   try {
@@ -14,6 +17,7 @@ export async function getProject(id: string) {
     });
     return project;
   } catch (error) {
+    logger.error("Erreur dans get-project:", error);
     return null;
   }
 }

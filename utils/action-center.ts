@@ -31,7 +31,7 @@ export const addOtherDataToFetchViewsData = (data: {
   const viewsKeys = getAllViewsKey();
   logger.debug("Clés de vues trouvées:", viewsKeys.length);
 
-  let dataWithOtherData: {
+  const dataWithOtherData: {
     [key: string]: {
       title: {
         title: string;
@@ -81,7 +81,7 @@ export const addOtherDataToFetchShareData = (data: {
   const sharesKeys = getAllShareKey();
   logger.debug("Clés de partage trouvées:", sharesKeys.length);
 
-  let dataWithOtherData: {
+  const dataWithOtherData: {
     [key: string]: {
       title: {
         title: string;
@@ -283,7 +283,7 @@ export const mergeData = (
   const processedReactionsData = convertReactionsForMerge(reactionsData);
 
   // Créer un tableau pour stocker toutes les données fusionnées
-  let mergedData = [];
+  const mergedData = [];
 
   // Ajouter les réactions avec le type correct
   const reactionsItems = Object.keys(processedReactionsData).map((key) => ({

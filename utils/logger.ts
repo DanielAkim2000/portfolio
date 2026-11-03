@@ -29,7 +29,7 @@ class Logger {
       : options.minLevel ?? LogLevel.DEBUG;
   }
 
-  private logWithLevel(level: LogLevel, message: string, ...args: any[]): void {
+  private logWithLevel(level: LogLevel, message: string, ...args: unknown[]): void {
     if (level < this.minLevel) return;
 
     const timestamp = new Date().toISOString();
@@ -53,19 +53,19 @@ class Logger {
     }
   }
 
-  debug(message: string, ...args: any[]): void {
+  debug(message: string, ...args: unknown[]): void {
     this.logWithLevel(LogLevel.DEBUG, message, ...args);
   }
 
-  info(message: string, ...args: any[]): void {
+  info(message: string, ...args: unknown[]): void {
     this.logWithLevel(LogLevel.INFO, message, ...args);
   }
 
-  warn(message: string, ...args: any[]): void {
+  warn(message: string, ...args: unknown[]): void {
     this.logWithLevel(LogLevel.WARN, message, ...args);
   }
 
-  error(message: string, ...args: any[]): void {
+  error(message: string, ...args: unknown[]): void {
     this.logWithLevel(LogLevel.ERROR, message, ...args);
   }
 }

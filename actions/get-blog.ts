@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("get-blog");
 
 export const getBlog = async (id: string) => {
   try {
@@ -13,6 +16,7 @@ export const getBlog = async (id: string) => {
     });
     return blog;
   } catch (error) {
+    logger.error("Erreur dans get-blog:", error);
     return null;
   }
 };

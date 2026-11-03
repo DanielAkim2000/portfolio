@@ -2,7 +2,7 @@ type Entry = { count: number; resetAt: number };
 
 const attempts = new Map<string, Entry>();
 
-export function isRateLimited(key: string, max: number, windowMs: number) {
+export function isRateLimited(key: string, max: number) {
   const now = Date.now();
 
   for (const [entryKey, entry] of attempts) {

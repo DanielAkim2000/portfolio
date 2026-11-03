@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("get-unified-action-center-data");
 import { ReactionType } from "@/prisma/generated/client";
 
 export type UnifiedActionCenterResponse = {
@@ -138,6 +141,7 @@ export const getUnifiedActionCenterData = async (
       blogAndProjectData: formattedBlogAndProjectData,
     };
   } catch (error) {
+    logger.error("Erreur dans get-unified-action-center-data:", error);
     return {
       reactions: {},
       blogAndProjectData: {},

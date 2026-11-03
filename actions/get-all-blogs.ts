@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("get-all-blogs");
 
 export const getAllBlogs = async () => {
   try {
@@ -19,6 +22,7 @@ export const getAllBlogs = async () => {
 
     return [...pinnedBlogs, ...otherBlogs];
   } catch (error) {
+    logger.error("Erreur dans get-all-blogs:", error);
     return [];
   }
 };

@@ -16,6 +16,7 @@ import { ActionButton } from "./action-button";
 import { KeyboardShortcutsSection } from "./keyboard-shortcuts-section";
 import { ActionPanelContent } from "./action-panel-content";
 import { reducer } from "./reducer";
+import { useIsClient } from "@/hooks/useIsClient";
 
 // Utils
 import {
@@ -40,7 +41,8 @@ export const HeaderSheet = () => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("header");
   const isXl = useBreakpoint("xl");
-  const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
+  const isClient = useIsClient();
+  const portalElement = isClient ? document.body : null;
 
   // accès à l'état du focus mode pour le raccourci clavier
   const { focusMode, setFocusMode } = useSettings();
@@ -110,11 +112,6 @@ export const HeaderSheet = () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
-
-  // Initialisation du portail
-  useEffect(() => {
-    setPortalElement(document.body);
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MoonStarIcon, SunIcon } from "lucide-react";
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
 import { useTheme } from "next-themes";
-import React from "react";
+import { useIsClient } from "@/hooks/useIsClient";
 import { useTranslations } from "next-intl";
 
 export default function ThemeToggle() {
@@ -12,8 +12,7 @@ export default function ThemeToggle() {
   const theme = useCurrentTheme();
   const { setTheme } = useTheme();
   const isDark = theme === "dark";
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
+  const mounted = useIsClient();
 
   if (!mounted) return null;
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Highlight, themes, type Language } from "prism-react-renderer";
 import { cn } from "@/lib/utils";
 import { useCurrentTheme } from "@/hooks/useCurrentTheme";
@@ -37,14 +37,9 @@ interface CodeBlockProps {
 export function CodeBlock({ code, language, className }: CodeBlockProps) {
   const resolvedTheme = useCurrentTheme();
   const [isCopied, setIsCopied] = useState(false);
-  const [isThemeLoaded, setIsThemeLoaded] = useState(false);
   const isDark = resolvedTheme === "dark";
 
-  useEffect(() => {
-    if (resolvedTheme) {
-      setIsThemeLoaded(true);
-    }
-  }, [resolvedTheme]);
+  const isThemeLoaded = !!resolvedTheme;
 
   const copyToClipboard = async () => {
     if (isCopied) return;

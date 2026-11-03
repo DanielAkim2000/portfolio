@@ -107,9 +107,11 @@ export const useActionCenterData = ({
   });
 
   // Initialiser les IDs au montage du composant
+  // Lecture du localStorage : disponible uniquement côté client, donc après le montage
   useEffect(() => {
     const ids = getLatestIds();
     logger.info("Initialisation avec IDs:", ids);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLatestIds(ids);
   }, [getLatestIds]);
 

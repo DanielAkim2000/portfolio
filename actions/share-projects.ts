@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("share-projects");
 import { revalidateTag } from "next/cache";
 
 export async function shareProject(projectId: string) {
@@ -14,6 +17,7 @@ export async function shareProject(projectId: string) {
     revalidateTag(`project-${projectId}`, "max");
     return { message: "Project shared" };
   } catch (error) {
+    logger.error("Erreur dans share-projects:", error);
     throw new Error("Error sharing project");
   }
 }
