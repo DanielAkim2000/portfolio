@@ -13,6 +13,7 @@ export const projects = [
       fr: "Un projet que je développe seul pour mon oncle : une API NestJS, une application mobile Expo, un back-office et un site vitrine Next.js, et une supervision Prometheus et Grafana.",
       en: "A project I build on my own for my uncle: a NestJS API, an Expo mobile app, a Next.js back-office and marketing site, and Prometheus and Grafana monitoring.",
     },
+    link: null, // ancien lien de prévisualisation Expo, périmé
     update: true, // existe déjà en base : on met à jour les textes, on garde id, vues et réactions
   },
   {

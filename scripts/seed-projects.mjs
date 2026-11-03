@@ -40,6 +40,9 @@ try {
           [p.title[locale], p.subtitle[locale], p.description[locale], projectId, locale]
         );
       }
+      if ("link" in p) {
+        await client.query(`update "Project" set link = $1, "updatedAt" = now() where id = $2`, [p.link, projectId]);
+      }
       console.log(`mis à jour : ${p.title.fr}`);
     } else {
       if (p.update) throw new Error(`${p.title.fr} devrait déjà exister en base`);
