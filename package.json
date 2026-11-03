@@ -68,6 +68,7 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
+  "packageManager": "pnpm@10.30.3",
   "pnpm": {
     "overrides": {
       "@types/react": "19.2.17",

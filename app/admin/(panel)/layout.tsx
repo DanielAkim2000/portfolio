@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { getSession } from "@/lib/auth";
 
+// Le panneau lit la base et la session : jamais pré-rendu au build.
+export const dynamic = "force-dynamic";
+
 export default async function AdminPanelLayout({
   children,
 }: {
