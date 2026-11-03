@@ -42,6 +42,25 @@ export default async function SkillsToolsPage() {
   const t = await getTranslations("skills_tools");
   const years = new Date().getFullYear() - 2023;
 
+  const SystemsSkillsAndTools = [
+    {
+      title: "C",
+      paragraph: t("c_paragraph"),
+    },
+    {
+      title: "C++",
+      paragraph: t("cpp_paragraph"),
+    },
+    {
+      title: "Unix",
+      paragraph: t("unix_paragraph"),
+    },
+    {
+      title: "WebAssembly",
+      paragraph: t("wasm_paragraph"),
+    },
+  ];
+
   const FrontEndSkillsAndTools = [
     {
       title: "TypeScript",
@@ -94,6 +113,14 @@ export default async function SkillsToolsPage() {
       paragraph: t("github_actions_paragraph"),
     },
     {
+      title: "Dokploy",
+      paragraph: t("dokploy_paragraph"),
+    },
+    {
+      title: "Prometheus & Grafana",
+      paragraph: t("prometheus_paragraph"),
+    },
+    {
       title: "Nginx",
       paragraph: t("nginx_paragraph"),
     },
@@ -125,6 +152,36 @@ export default async function SkillsToolsPage() {
             </p>
             <br />
             <p>{t("scope_interest")}</p>
+          </div>
+          <Separator />
+          <div className="my-5 text-slate-600 dark:text-slate-400">
+            <TitleWorkSections
+              title={t("systems_developer")}
+              id="systems-developer"
+            />
+            <p>{t("systems_love")}</p>
+            <p>{t("systems_enjoy")}</p>
+            <ul className="list-disc list-inside pl-5 my-5">
+              <li>{t("systems_memory")}</li>
+              <li>{t("systems_processes")}</li>
+              <li>{t("systems_concurrency")}</li>
+              <li>{t("systems_network")}</li>
+              <li>{t("systems_oop")}</li>
+              <li>{t("systems_graphics")}</li>
+              <li>{t("systems_algorithms")}</li>
+            </ul>
+            <p>{t("systems_journey")}</p>
+            {SystemsSkillsAndTools.map((item) => {
+              const id = createId(item.title);
+              return (
+                <CardSkillsAndTools
+                  key={id}
+                  title={item.title}
+                  paragraph={item.paragraph}
+                  id={id}
+                />
+              );
+            })}
           </div>
           <Separator />
           <div className="my-5 text-slate-600 dark:text-slate-400">
@@ -216,6 +273,15 @@ export default async function SkillsToolsPage() {
         <StickySidebar
           variant="tertiary"
           sections={[
+            {
+              id: "systems-developer",
+              title: t("systems_developer"),
+              isTitle: true,
+            },
+            ...SystemsSkillsAndTools.map((item) => ({
+              id: createId(item.title),
+              title: item.title,
+            })),
             {
               id: "front-end-developer",
               title: t("front_end_developer"),

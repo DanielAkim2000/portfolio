@@ -2,7 +2,9 @@
 
 import CardHome from "@/components/card/home/card.home";
 import { TitleBlock } from "@/components/block/title.block";
+import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 export function Section42Highlights() {
   const t = useTranslations("home");
@@ -29,6 +31,12 @@ export function Section42Highlights() {
           title={t("networks_devops")}
           description={t("networks_devops_description")}
         />
+      </div>
+      <div className="mt-6 flex flex-wrap items-center gap-4">
+        <Button asChild size="lg">
+          <Link href="/projects">{t("forty_two_cta")}</Link>
+        </Button>
+        <p className="text-sm text-muted-foreground">{t("forty_two_cta_hint")}</p>
       </div>
     </div>
   );
