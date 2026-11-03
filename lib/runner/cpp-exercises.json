@@ -1,0 +1,326 @@
+[
+  {
+    "id": "cpp00_ex00",
+    "module": "00",
+    "exercise": "ex00",
+    "name": "Megaphone",
+    "input": "args",
+    "argsMode": "split",
+    "sample": "shhhhh... I think the students are asleep..."
+  },
+  {
+    "id": "cpp00_ex01",
+    "module": "00",
+    "exercise": "ex01",
+    "name": "PhoneBook",
+    "input": "stdin",
+    "argsMode": "split",
+    "sample": "ADD\nJohn\nDoe\nJD\n0612345678\nLoves C++\nSEARCH\n0\nEXIT"
+  },
+  {
+    "id": "cpp00_ex02",
+    "module": "00",
+    "exercise": "ex02",
+    "name": "The Job Of Your Dreams (Account)",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp01_ex00",
+    "module": "01",
+    "exercise": "ex00",
+    "name": "BraiiiiiiinnnzzzZ",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp01_ex01",
+    "module": "01",
+    "exercise": "ex01",
+    "name": "Moar brainz!",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp01_ex02",
+    "module": "01",
+    "exercise": "ex02",
+    "name": "HI THIS IS BRAIN",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp01_ex03",
+    "module": "01",
+    "exercise": "ex03",
+    "name": "Unnecessary violence",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp01_ex05",
+    "module": "01",
+    "exercise": "ex05",
+    "name": "Harl 2.0",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp01_ex06",
+    "module": "01",
+    "exercise": "ex06",
+    "name": "Harl filter",
+    "input": "args",
+    "argsMode": "single",
+    "sample": "WARNING"
+  },
+  {
+    "id": "cpp02_ex00",
+    "module": "02",
+    "exercise": "ex00",
+    "name": "My First Orthodox Class",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp02_ex01",
+    "module": "02",
+    "exercise": "ex01",
+    "name": "Towards a more useful fixed-point class",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp02_ex02",
+    "module": "02",
+    "exercise": "ex02",
+    "name": "Now we're talking",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp02_ex03",
+    "module": "02",
+    "exercise": "ex03",
+    "name": "BSP",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp03_ex00",
+    "module": "03",
+    "exercise": "ex00",
+    "name": "ClapTrap",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp03_ex01",
+    "module": "03",
+    "exercise": "ex01",
+    "name": "ScavTrap",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp03_ex02",
+    "module": "03",
+    "exercise": "ex02",
+    "name": "FragTrap",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp03_ex03",
+    "module": "03",
+    "exercise": "ex03",
+    "name": "DiamondTrap",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp04_ex00",
+    "module": "04",
+    "exercise": "ex00",
+    "name": "Polymorphism",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp04_ex01",
+    "module": "04",
+    "exercise": "ex01",
+    "name": "I want to be a brain",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp04_ex02",
+    "module": "04",
+    "exercise": "ex02",
+    "name": "Abstract class",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp04_ex03",
+    "module": "04",
+    "exercise": "ex03",
+    "name": "Interface & recap",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp05_ex00",
+    "module": "05",
+    "exercise": "ex00",
+    "name": "Bureaucrat",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp05_ex01",
+    "module": "05",
+    "exercise": "ex01",
+    "name": "Form",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp05_ex02",
+    "module": "05",
+    "exercise": "ex02",
+    "name": "No, you need form 28B",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp05_ex03",
+    "module": "05",
+    "exercise": "ex03",
+    "name": "Intern",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp06_ex00",
+    "module": "06",
+    "exercise": "ex00",
+    "name": "Conversion of scalar types",
+    "input": "args",
+    "argsMode": "split",
+    "sample": "42 0 a 3.14 3.14f nan -inff 2147483648"
+  },
+  {
+    "id": "cpp06_ex01",
+    "module": "06",
+    "exercise": "ex01",
+    "name": "Serialization",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp06_ex02",
+    "module": "06",
+    "exercise": "ex02",
+    "name": "Identify real type",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp07_ex00",
+    "module": "07",
+    "exercise": "ex00",
+    "name": "Start with a few functions",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp07_ex01",
+    "module": "07",
+    "exercise": "ex01",
+    "name": "Iter",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp07_ex02",
+    "module": "07",
+    "exercise": "ex02",
+    "name": "Array",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp08_ex00",
+    "module": "08",
+    "exercise": "ex00",
+    "name": "Easy find",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp08_ex01",
+    "module": "08",
+    "exercise": "ex01",
+    "name": "Span",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp08_ex02",
+    "module": "08",
+    "exercise": "ex02",
+    "name": "Mutated abomination",
+    "input": "none",
+    "argsMode": "split",
+    "sample": ""
+  },
+  {
+    "id": "cpp09_ex01",
+    "module": "09",
+    "exercise": "ex01",
+    "name": "Reverse Polish Notation",
+    "input": "args",
+    "argsMode": "single",
+    "sample": "8 9 * 9 - 9 - 9 - 4 - 1 +"
+  },
+  {
+    "id": "cpp09_ex02",
+    "module": "09",
+    "exercise": "ex02",
+    "name": "PmergeMe",
+    "input": "args",
+    "argsMode": "split",
+    "sample": "3 5 9 7 4 11 2"
+  }
+]

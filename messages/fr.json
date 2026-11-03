@@ -309,7 +309,11 @@
     "runner_ft_printf_note": "Ton format est passé à mon ft_printf puis au printf de la libc, pour comparer. Cette libc (musl, via Emscripten) diffère de glibc sur quelques cas, comme %p avec un pointeur nul. Un correctif est appliqué à la compilation pour les entiers 32 bits (long de 64 bits supposé dans mon code).",
     "runner_get_next_line_label": "Texte envoyé à get_next_line (une ligne par appel)",
     "runner_get_next_line_note": "Chaque appel de mon get_next_line sur l'entrée standard est affiché avec sa longueur, le retour à la ligne final étant rendu visible (\\n). BUFFER_SIZE vaut 42.",
-    "runner_no_output": "Le programme n'a rien affiché."
+    "runner_no_output": "Le programme n'a rien affiché.",
+    "runner_cpp_exercise": "Exercice",
+    "runner_cpp_label_args": "Arguments passés au programme",
+    "runner_cpp_label_stdin": "Entrée standard (une saisie par ligne)",
+    "runner_cpp_note": "C'est le vrai code C++98 de l'exercice, compilé avec Emscripten (exceptions activées). Certains exercices utilisent le hasard ou l'heure : la sortie peut varier d'une exécution à l'autre. Les exercices qui lisent des fichiers (cpp01 ex04, cpp09 ex00) ne sont pas proposés."
   },
   "blog": {
     "title": "Blog Personnel",

@@ -69,7 +69,27 @@ build_get_next_line() {
     /demos/gnl_demo.c get_next_line.c get_next_line_utils.c -o /out/get_next_line/gnl_demo.js
 }
 
-targets=("${@:-push_swap libft ft_printf get_next_line}")
+# Modules C++ 00 à 09 : un programme par exercice (cppNN/exNN/*.cpp), compilés en C++98 avec exceptions.
+# Exclus : cpp01/ex04 et cpp09/ex00, qui lisent des fichiers que le visiteur n'a pas.
+build_cpp() {
+  mkdir -p "$OUT/cpp"
+  local n
+  for n in 00 01 02 03 04 05 06 07 08 09; do fetch "cpp$n" "cpp$n"; done
+  docker run --rm -u "$(id -u):$(id -g)" -v "$WORK:/src" -v "$OUT:/out" -w /src "$IMAGE" bash -c '
+    set -e
+    for dir in cpp*/ex*; do
+      case "$dir" in cpp01/ex04|cpp09/ex00) continue ;; esac
+      mod=${dir%%/*}; ex=${dir##*/}
+      name=${mod}_${ex}
+      factory="createCpp${mod#cpp}Ex${ex#ex}"
+      em++ -O2 -std=c++98 -fexceptions -sMODULARIZE=1 -sENVIRONMENT=worker -sINVOKE_RUN=0 -sEXIT_RUNTIME=1 \
+        -sEXPORTED_RUNTIME_METHODS=callMain -sALLOW_MEMORY_GROWTH=1 -sEXPORT_NAME="$factory" -I"$dir" \
+        "$dir"/*.cpp -o /out/cpp/$name.js 2>&1 | grep -E "error" || true
+      [ -f /out/cpp/$name.wasm ] && echo "ok  $name" || echo "ECHEC $name"
+    done'
+}
+
+targets=("${@:-push_swap libft ft_printf get_next_line cpp}")
 read -ra targets <<<"${targets[*]}"
 for t in "${targets[@]}"; do "build_$t"; done
 ls -la "$OUT"/*/

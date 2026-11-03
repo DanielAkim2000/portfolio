@@ -19,6 +19,7 @@ import { Dices, Loader2, Play, Terminal } from "lucide-react";
 const MAX_ARGS = 1000;
 
 type Result = {
+  /** Renseigné seulement quand un checker valide la sortie (push_swap) */
   moves: number | null;
   verdict: string | null;
   output: string;
@@ -36,14 +37,29 @@ function randomDistinctNumbers(count: number) {
 export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
   const t = useTranslations("projects/id");
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState(config.sample);
+  const [variantIndex, setVariantIndex] = useState(0);
+  const variant = config.variants[variantIndex];
+  const [input, setInput] = useState(variant.sample);
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const groups = [...new Set(config.variants.map((item) => item.group ?? ""))];
+
+  function selectVariant(index: number) {
+    setVariantIndex(index);
+    setInput(config.variants[index].sample);
+    setResult(null);
+    setError(null);
+  }
+
   async function handleRun() {
-    const isArgs = config.input === "args";
-    const args = isArgs ? input.split(/\s+/).filter(Boolean) : [];
+    const args =
+      variant.input === "args"
+        ? variant.argsMode === "single"
+          ? [input.trim()]
+          : input.split(/\s+/).filter(Boolean)
+        : [];
     if (args.length > MAX_ARGS) {
       setError(t("runner_error_too_many", { max: MAX_ARGS }));
       return;
@@ -55,12 +71,12 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
 
     try {
       const run = await runWasm({
-        program: config.program,
+        program: variant.program,
         args,
-        stdin: isArgs ? "" : input,
+        stdin: variant.input === "stdin" ? input : "",
       });
 
-      if (!isArgs) {
+      if (!variant.checker) {
         setResult({
           moves: null,
           verdict: null,
@@ -75,21 +91,15 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
         return;
       }
 
-      const lines = run.stdout.split("\n").filter(Boolean);
-      let verdict: string | null = null;
-
-      if (config.checker) {
-        const check = await runWasm({
-          program: config.checker,
-          args,
-          stdin: run.stdout,
-        });
-        verdict = check.stdout.trim() || check.stderr.trim() || null;
-      }
+      const check = await runWasm({
+        program: variant.checker,
+        args,
+        stdin: run.stdout,
+      });
 
       setResult({
-        moves: lines.length,
-        verdict,
+        moves: run.stdout.split("\n").filter(Boolean).length,
+        verdict: check.stdout.trim() || check.stderr.trim() || null,
         output: run.stdout,
         errors: run.stderr.trim(),
       });
@@ -112,7 +122,7 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
           <span>{t("runner_open")}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Terminal className="size-5" />
@@ -122,37 +132,69 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="runner-args"
-              className="text-sm font-medium text-foreground"
-            >
-              {t(`runner_${config.id}_label`)}
-            </label>
-            <Textarea
-              id="runner-args"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              rows={config.input === "stdin" ? 9 : 3}
-              className="font-mono text-sm"
-            />
-          </div>
+          {config.variants.length > 1 && (
+            <div className="space-y-2">
+              <label
+                htmlFor="runner-variant"
+                className="text-sm font-medium text-foreground"
+              >
+                {t("runner_cpp_exercise")}
+              </label>
+              <select
+                id="runner-variant"
+                value={variantIndex}
+                onChange={(event) => selectVariant(Number(event.target.value))}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                {groups.map((group) => (
+                  <optgroup key={group} label={group}>
+                    {config.variants.map(
+                      (item, index) =>
+                        (item.group ?? "") === group && (
+                          <option key={item.id} value={index}>
+                            {item.label}
+                          </option>
+                        )
+                    )}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {variant.input !== "none" && (
+            <div className="space-y-2">
+              <label
+                htmlFor="runner-input"
+                className="text-sm font-medium text-foreground"
+              >
+                {t(variant.labelKey ?? "runner_cpp_label_args")}
+              </label>
+              <Textarea
+                id="runner-input"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                rows={variant.input === "stdin" ? 9 : 3}
+                className="font-mono text-sm"
+              />
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-2">
             <Button onClick={handleRun} disabled={isRunning}>
               {isRunning ? <Loader2 className="animate-spin" /> : <Play />}
               <span>{isRunning ? t("runner_running") : t("runner_run")}</span>
             </Button>
-            {config.randomCount && (
+            {variant.randomCount && (
               <Button
                 variant="outline"
                 onClick={() =>
-                  setInput(randomDistinctNumbers(config.randomCount ?? 0))
+                  setInput(randomDistinctNumbers(variant.randomCount ?? 0))
                 }
                 disabled={isRunning}
               >
                 <Dices />
-                <span>{t("runner_random", { count: config.randomCount })}</span>
+                <span>{t("runner_random", { count: variant.randomCount })}</span>
               </Button>
             )}
           </div>
@@ -173,15 +215,18 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
                 </p>
               )}
               {result.errors && (
-                <p className="font-mono text-sm text-destructive">{result.errors}</p>
+                <p className="font-mono text-sm whitespace-pre-wrap text-destructive">
+                  {result.errors}
+                </p>
               )}
               <pre className="max-h-72 overflow-auto rounded-lg border bg-muted/40 p-4 font-mono text-sm whitespace-pre-wrap">
-                {result.output || t(config.input === "args" ? "runner_output_empty" : "runner_no_output")}
+                {result.output ||
+                  t(variant.checker ? "runner_output_empty" : "runner_no_output")}
               </pre>
             </div>
           )}
 
-          <p className="text-xs text-muted-foreground">{t(`runner_${config.id}_note`)}</p>
+          <p className="text-xs text-muted-foreground">{t(variant.noteKey)}</p>
         </div>
       </DialogContent>
     </Dialog>
