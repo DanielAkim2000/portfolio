@@ -19,7 +19,7 @@ import { Dices, Loader2, Play, Terminal } from "lucide-react";
 const MAX_ARGS = 1000;
 
 type Result = {
-  moves: number;
+  moves: number | null;
   verdict: string | null;
   output: string;
   errors: string;
@@ -36,13 +36,14 @@ function randomDistinctNumbers(count: number) {
 export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
   const t = useTranslations("projects/id");
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState(config.sampleArgs);
+  const [input, setInput] = useState(config.sample);
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleRun() {
-    const args = input.split(/\s+/).filter(Boolean);
+    const isArgs = config.input === "args";
+    const args = isArgs ? input.split(/\s+/).filter(Boolean) : [];
     if (args.length > MAX_ARGS) {
       setError(t("runner_error_too_many", { max: MAX_ARGS }));
       return;
@@ -53,15 +54,31 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
     setResult(null);
 
     try {
-      const run = await runWasm({ program: config.program, args });
+      const run = await runWasm({
+        program: config.program,
+        args,
+        stdin: isArgs ? "" : input,
+      });
+
+      if (!isArgs) {
+        setResult({
+          moves: null,
+          verdict: null,
+          output: run.stdout,
+          errors: run.stderr.trim(),
+        });
+        return;
+      }
+
       if (run.exitCode !== 0) {
         setError(t("runner_error_invalid"));
         return;
       }
+
       const lines = run.stdout.split("\n").filter(Boolean);
       let verdict: string | null = null;
 
-      if (config.checker && run.exitCode === 0) {
+      if (config.checker) {
         const check = await runWasm({
           program: config.checker,
           args,
@@ -110,13 +127,13 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
               htmlFor="runner-args"
               className="text-sm font-medium text-foreground"
             >
-              {t("runner_args_label")}
+              {t(`runner_${config.id}_label`)}
             </label>
             <Textarea
               id="runner-args"
               value={input}
               onChange={(event) => setInput(event.target.value)}
-              rows={3}
+              rows={config.input === "stdin" ? 9 : 3}
               className="font-mono text-sm"
             />
           </div>
@@ -126,14 +143,18 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
               {isRunning ? <Loader2 className="animate-spin" /> : <Play />}
               <span>{isRunning ? t("runner_running") : t("runner_run")}</span>
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => setInput(randomDistinctNumbers(config.randomCount))}
-              disabled={isRunning}
-            >
-              <Dices />
-              <span>{t("runner_random", { count: config.randomCount })}</span>
-            </Button>
+            {config.randomCount && (
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setInput(randomDistinctNumbers(config.randomCount ?? 0))
+                }
+                disabled={isRunning}
+              >
+                <Dices />
+                <span>{t("runner_random", { count: config.randomCount })}</span>
+              </Button>
+            )}
           </div>
 
           {error && (
@@ -144,20 +165,23 @@ export function WasmRunner({ config }: { config: WasmRunnerConfig }) {
 
           {result && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-foreground">
-                {t("runner_moves", { count: result.moves })}
-                {result.verdict && ` · ${t("runner_checker", { result: result.verdict })}`}
-              </p>
+              {result.moves !== null && (
+                <p className="text-sm font-medium text-foreground">
+                  {t("runner_moves", { count: result.moves })}
+                  {result.verdict &&
+                    ` · ${t("runner_checker", { result: result.verdict })}`}
+                </p>
+              )}
               {result.errors && (
                 <p className="font-mono text-sm text-destructive">{result.errors}</p>
               )}
               <pre className="max-h-72 overflow-auto rounded-lg border bg-muted/40 p-4 font-mono text-sm whitespace-pre-wrap">
-                {result.output || t("runner_output_empty")}
+                {result.output || t(config.input === "args" ? "runner_output_empty" : "runner_no_output")}
               </pre>
             </div>
           )}
 
-          <p className="text-xs text-muted-foreground">{t("runner_note")}</p>
+          <p className="text-xs text-muted-foreground">{t(`runner_${config.id}_note`)}</p>
         </div>
       </DialogContent>
     </Dialog>
