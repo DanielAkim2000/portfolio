@@ -14,7 +14,6 @@ export const projects = [
       en: "A project I build on my own for my uncle: a NestJS API, an Expo mobile app, a Next.js back-office and marketing site, and Prometheus and Grafana monitoring.",
     },
     link: null, // ancien lien de prévisualisation Expo, périmé
-    update: true, // existe déjà en base : on met à jour les textes, on garde id, vues et réactions
   },
   {
     title: { fr: "ft_transcendence", en: "ft_transcendence" },

@@ -1,27 +1,43 @@
-name: CI/CD Pipeline
+name: CI
+
+# Vérifie que le projet compile et respecte les règles. Le déploiement est fait par Dokploy
+# (build du Dockerfile à chaque push sur main) : ce workflow ne déploie rien.
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
+    env:
+      # prisma.config.ts exige la variable ; aucune connexion n'est ouverte (pages dynamiques)
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Agent Ssh
-        uses: webfactory/ssh-agent@v0.5.3
+      # pnpm est lu dans le champ packageManager de package.json
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Copy files to server
-        run: |
-          ssh -o StrictHostKeyChecking=no -p 2222 nna-ekamkam@86.196.4.160 << 'EOF'
-            cd /home/nna-ekamkam/projets/portfolio_next_js
-            git pull origin main
-            docker-compose down
-            docker-compose up -d --build
-          EOF
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: npx prisma generate
+      - name: Types
+        run: npx tsc --noEmit
+      - name: Lint
+        run: pnpm lint
+      - name: Build
+        run: pnpm build

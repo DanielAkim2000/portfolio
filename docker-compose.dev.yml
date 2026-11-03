@@ -1,0 +1,25 @@
+# Base PostgreSQL de DÉVELOPPEMENT uniquement (la production est gérée par Dokploy).
+#   pnpm db:up        démarre la base
+#   pnpm db:migrate   applique les migrations Prisma
+#   pnpm db:seed      insère les projets du portfolio
+#   pnpm seed:admin   crée le compte admin (ADMIN_EMAIL / ADMIN_PASSWORD dans .env.local)
+services:
+  db:
+    image: postgres:15-alpine # même version majeure que la production
+    container_name: portfolio_dev_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio_dev
+      POSTGRES_DB: portfolio_dev
+    ports:
+      - "127.0.0.1:5434:5432" # uniquement en local ; 5432 et 5433 sont souvent déjà pris
+    volumes:
+      - portfolio_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio -d portfolio_dev"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  portfolio_dev_data:

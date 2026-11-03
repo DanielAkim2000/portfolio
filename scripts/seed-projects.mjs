@@ -6,7 +6,7 @@
 //
 // Le fichier MDX de chaque projet doit déjà être déployé : sinon sa page plante.
 
-import "dotenv/config";
+import "./load-env.mjs";
 import { randomUUID } from "node:crypto";
 import pg from "pg";
 import { projects, projectsToDelete } from "./projects-data.mjs";
@@ -48,7 +48,6 @@ try {
       }
       console.log(`mis à jour : ${p.title.fr}`);
     } else {
-      if (p.update) throw new Error(`${p.title.fr} devrait déjà exister en base`);
       projectId = randomUUID();
       // createdAt échelonné : la liste du site est triée par date de création croissante
       const createdAt = new Date(base + ++order * 60_000);

@@ -53,7 +53,7 @@ export const HeaderSheet = () => {
   }, [theme, setTheme]);
 
   // fonction pour basculer le mode focus
-  const toggleFocusMode = () => {
+  const toggleFocusMode = useCallback(() => {
     setFocusMode(!focusMode);
     toast.info(
       <span className="text-primary">
@@ -68,7 +68,7 @@ export const HeaderSheet = () => {
         position: isOpen ? "top-center" : "top-right",
       }
     );
-  };
+  }, [focusMode, setFocusMode, t, isOpen]);
 
   const mergedData = useMemo(() => {
     if (!state.reactions || !state.shareData || !state.reactionData) {

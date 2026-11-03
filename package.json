@@ -10,6 +10,10 @@
     "prisma:migrate:prod": "prisma migrate deploy",
     "prisma:generate:prod": "prisma generate",
     "prisma:studio": "prisma studio",
+    "db:up": "docker compose -f docker-compose.dev.yml up -d --wait",
+    "db:down": "docker compose -f docker-compose.dev.yml down",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node scripts/seed-projects.mjs --apply",
     "seed:admin": "node scripts/seed-admin.mjs"
   },
   "dependencies": {
