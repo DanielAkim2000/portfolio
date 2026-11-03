@@ -47,7 +47,6 @@ export default async function AdminProjectsPage() {
                 const titleFr =
                   project.title.find((item) => item.locale === "fr")?.title ??
                   "—";
-                const slug = titleFr;
 
                 return (
                   <TableRow key={project.id}>
@@ -60,7 +59,7 @@ export default async function AdminProjectsPage() {
                       <div className="flex justify-end gap-1">
                         <AdminEditLink href={`/admin/projects/${project.id}`} />
                         <AdminDeleteButton
-                          action={deleteProject.bind(null, project.id, slug)}
+                          action={deleteProject.bind(null, project.id)}
                           itemName={titleFr}
                         />
                       </div>

@@ -8,6 +8,19 @@ export type GithubRepoRef = {
   repo: string;
 };
 
+const GITHUB_NAME = /^[A-Za-z0-9._-]{1,100}$/;
+const GIT_BRANCH = /^[A-Za-z0-9._/-]{1,100}$/;
+const SOURCE_PATH = /^[A-Za-z0-9._/-]{1,200}$/;
+const MAX_SOURCE_FILES = 20;
+
+function isSafeRelativePath(value: string, pattern: RegExp) {
+  return (
+    pattern.test(value) &&
+    !value.split("/").includes("..") &&
+    !value.includes("//")
+  );
+}
+
 export function parseGithubRepoUrl(url: string): GithubRepoRef | null {
   try {
     const parsed = new URL(url);
@@ -20,7 +33,12 @@ export function parseGithubRepoUrl(url: string): GithubRepoRef | null {
       return null;
     }
 
-    return { owner, repo: repo.replace(/\.git$/, "") };
+    const cleanRepo = repo.replace(/\.git$/, "");
+    if (!GITHUB_NAME.test(owner) || !GITHUB_NAME.test(cleanRepo)) {
+      return null;
+    }
+
+    return { owner, repo: cleanRepo };
   } catch {
     return null;
   }
@@ -48,12 +66,20 @@ export async function fetchGithubRunnerSources({
     throw new Error("INVALID_GITHUB_URL");
   }
 
-  if (files.length === 0) {
+  if (files.length === 0 || files.length > MAX_SOURCE_FILES) {
     throw new Error("NO_SOURCE_FILES");
+  }
+
+  if (!isSafeRelativePath(branch, GIT_BRANCH)) {
+    throw new Error("INVALID_GITHUB_URL");
   }
 
   const sources = await Promise.all(
     files.map(async (filePath) => {
+      if (!isSafeRelativePath(filePath.replace(/^\//, ""), SOURCE_PATH)) {
+        throw new Error(`SOURCE_FETCH_FAILED:${filePath}`);
+      }
+
       const response = await fetch(
         githubRawFileUrl(repo, branch, filePath)
       );

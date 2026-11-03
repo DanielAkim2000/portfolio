@@ -6,7 +6,6 @@ import prisma from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import {
   deleteMdxFile,
-  deleteMdxForAllLocales,
   readMdxFile,
   writeMdxFile,
 } from "@/lib/mdx-admin";
@@ -83,9 +82,12 @@ export async function getAdminProject(id: string) {
     project.title[0]?.title ??
     "";
 
+  const titleEn =
+    project.title.find((item) => item.locale === "en")?.title ?? slug;
+
   const [mdxFr, mdxEn] = await Promise.all([
     readMdxFile("fr", "projects", slug),
-    readMdxFile("en", "projects", slug),
+    readMdxFile("en", "projects", titleEn),
   ]);
 
   return { ...project, slug, mdxFr, mdxEn };
@@ -157,11 +159,16 @@ export async function updateProject(id: string, formData: FormData) {
   const images = parseImages(formData.get("images") as string);
   const mdxFr = formData.get("mdxFr") as string;
   const mdxEn = formData.get("mdxEn") as string;
-  const oldSlug = formData.get("oldSlug") as string;
 
   const titleFr = formData.get("titleFr") as string;
   const titleEn = formData.get("titleEn") as string;
   const runnerData = parseRunnerData(formData);
+
+  const current = await prisma.title.findFirst({
+    where: { projectId: id, locale: "fr" },
+    select: { title: true },
+  });
+  const oldSlug = current?.title;
 
   await prisma.$transaction([
     prisma.project.update({
@@ -207,11 +214,18 @@ export async function updateProject(id: string, formData: FormData) {
   revalidatePath(`/admin/projects/${id}`);
 }
 
-export async function deleteProject(id: string, slug: string) {
+export async function deleteProject(id: string) {
   await requireAuth();
 
+  const titles = await prisma.title.findMany({
+    where: { projectId: id },
+    select: { locale: true, title: true },
+  });
+
   await prisma.project.delete({ where: { id } });
-  await deleteMdxForAllLocales("projects", slug);
+  await Promise.all(
+    titles.map(({ locale, title }) => deleteMdxFile(locale, "projects", title))
+  );
 
   revalidateTag("projects", { expire: 0 });
   revalidateTag(`project-${id}`, { expire: 0 });

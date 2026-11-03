@@ -2,6 +2,17 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import prisma from "@/lib/prisma";
+import {
+  clearAttempts,
+  isRateLimited,
+  registerAttempt,
+} from "@/lib/rate-limit";
+
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+// Hash factice : évite de révéler par le temps de réponse si un email existe.
+const DUMMY_HASH =
+  "$2b$12$C6UzMDM.H6dfI/f/IKcEeO8dY6xk5yX1gk0YtqzQwJq8s5bYk3q0m";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,8 +22,19 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Mot de passe", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const forwarded = req?.headers?.["x-forwarded-for"];
+        const ip = (Array.isArray(forwarded) ? forwarded[0] : forwarded)
+          ?.split(",")[0]
+          ?.trim();
+        const emailKey = `login:email:${credentials.email.toLowerCase()}`;
+        const keys = ip ? [emailKey, `login:ip:${ip}`] : [emailKey];
+
+        if (keys.some((key) => isRateLimited(key, MAX_LOGIN_ATTEMPTS, LOGIN_WINDOW_MS))) {
           return null;
         }
 
@@ -20,15 +42,17 @@ export const authOptions: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
-        if (!user) {
+        const isValid = await compare(
+          credentials.password,
+          user?.password ?? DUMMY_HASH
+        );
+
+        if (!user || !isValid) {
+          keys.forEach((key) => registerAttempt(key, LOGIN_WINDOW_MS));
           return null;
         }
 
-        const isValid = await compare(credentials.password, user.password);
-
-        if (!isValid) {
-          return null;
-        }
+        clearAttempts(emailKey);
 
         return {
           id: user.id,
