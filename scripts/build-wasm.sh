@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Compile les projets 42 exécutables dans le navigateur (WebAssembly, via Emscripten dans Docker).
+# Les sorties sont commitées dans public/wasm : le build du site n'a pas besoin d'Emscripten.
+#
+#   scripts/build-wasm.sh            compile tout
+#   scripts/build-wasm.sh push_swap  compile un seul projet
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+OUT="$PWD/public/wasm"
+WORK="${WASM_WORKDIR:-$(mktemp -d)}"
+IMAGE="emscripten/emsdk:6.0.13"
+GITHUB="https://github.com/DanielAkim2000"
+
+COMMON_FLAGS=(-O2 -sMODULARIZE=1 -sENVIRONMENT=worker -sINVOKE_RUN=0 -sEXIT_RUNTIME=1
+  -sEXPORTED_RUNTIME_METHODS=callMain -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=1048576 -Wall)
+
+fetch() { # <repo> <dossier>
+  rm -rf "$WORK/$2" && git clone -q --depth 1 "$GITHUB/$1.git" "$WORK/$2"
+  echo "$2 @ $(git -C "$WORK/$2" rev-parse --short HEAD)"
+}
+
+emcc() { # <dossier> <args emcc...>
+  local dir="$1"; shift
+  docker run --rm -u "$(id -u):$(id -g)" -v "$WORK:/src" -v "$OUT:/out" -w "/src/$dir" "$IMAGE" emcc "$@"
+}
+
+build_push_swap() {
+  fetch push_swap push_swap
+  mkdir -p "$OUT/push_swap"
+  local libft=$(cd "$WORK/push_swap" && ls libft/*.c | tr '\n' ' ')
+  local common="pile_utils.c push_swap_actions.c push_swap_actions2.c push_swap_utils.c push_swap_utils2.c
+    execution_turk.c execution_turk2.c index_and_cost.c initialise_utils.c target_node.c
+    parser/parser_utils.c parser/parser_utils2.c parser/parser.c
+    lis/compute_lis_lenghts.c lis/make_lis_keep.c lis/move_stack_except_below.c"
+  # shellcheck disable=SC2086
+  emcc push_swap "${COMMON_FLAGS[@]}" -sEXPORT_NAME=createPushSwap -I. $common push_swap.c $libft -o /out/push_swap/push_swap.js
+  # shellcheck disable=SC2086
+  emcc push_swap "${COMMON_FLAGS[@]}" -sEXPORT_NAME=createChecker -I. $common tester.c tester_utils.c \
+    get_next_line/get_next_line.c get_next_line/get_next_line_utils.c $libft -o /out/push_swap/checker.js
+}
+
+targets=("${@:-push_swap}")
+for t in "${targets[@]}"; do "build_$t"; done
+ls -la "$OUT"/*/

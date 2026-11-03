@@ -43,11 +43,6 @@ export default async function EditProjectPage({
           descriptionEn: descriptionEn?.content ?? "",
           mdxFr: project.mdxFr,
           mdxEn: project.mdxEn,
-          makable: project.makable,
-          runnerLanguage: project.runnerLanguage ?? "c",
-          runnerGithubBranch: project.runnerGithubBranch ?? "main",
-          runnerGithubFiles: project.runnerGithubFiles.join(", "),
-          runnerSampleStdin: project.runnerSampleStdin ?? "",
         }}
       />
       <div className="mt-6">

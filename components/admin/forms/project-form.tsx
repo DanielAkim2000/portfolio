@@ -15,11 +15,6 @@ type ProjectFormValues = {
   githubLink?: string;
   images?: string;
   oldSlug?: string;
-  makable?: boolean;
-  runnerLanguage?: string;
-  runnerGithubBranch?: string;
-  runnerGithubFiles?: string;
-  runnerSampleStdin?: string;
   titleFr?: string;
   titleEn?: string;
   subtitleFr?: string;
@@ -66,71 +61,6 @@ export function ProjectForm({
               name="images"
               defaultValue={defaultValues.images}
             />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Compilation C/C++ (Make)</CardTitle>
-          <CardDescription>
-            Active uniquement pour les projets console non graphiques. La
-            compilation se lance depuis le navigateur du visiteur via une API
-            externe, sans charger ton serveur.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <label className="flex items-center gap-2 text-sm font-medium">
-            <input
-              type="checkbox"
-              name="makable"
-              defaultChecked={defaultValues.makable}
-              className="size-4 rounded border"
-            />
-            Projet compilable (Make)
-          </label>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="runnerLanguage">Langage</Label>
-              <select
-                id="runnerLanguage"
-                name="runnerLanguage"
-                defaultValue={defaultValues.runnerLanguage ?? "c"}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                <option value="c">C</option>
-                <option value="cpp">C++</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="runnerGithubBranch">Branche GitHub</Label>
-              <Input
-                id="runnerGithubBranch"
-                name="runnerGithubBranch"
-                defaultValue={defaultValues.runnerGithubBranch ?? "main"}
-              />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="runnerGithubFiles">
-                Fichiers sources (chemins GitHub, séparés par des virgules)
-              </Label>
-              <Input
-                id="runnerGithubFiles"
-                name="runnerGithubFiles"
-                placeholder="src/main.c, src/utils.c, includes/lib.h"
-                defaultValue={defaultValues.runnerGithubFiles}
-              />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="runnerSampleStdin">Entrée stdin de démo (optionnel)</Label>
-              <Textarea
-                id="runnerSampleStdin"
-                name="runnerSampleStdin"
-                rows={3}
-                className="font-mono text-sm"
-                defaultValue={defaultValues.runnerSampleStdin}
-              />
-            </div>
           </div>
         </CardContent>
       </Card>

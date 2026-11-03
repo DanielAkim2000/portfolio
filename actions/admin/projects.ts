@@ -24,42 +24,6 @@ function parseGithubLinks(value: string) {
     .filter(Boolean);
 }
 
-function parseGithubFiles(value: string) {
-  return value
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function parseMakable(formData: FormData) {
-  return formData.get("makable") === "on";
-}
-
-function parseRunnerLanguage(value: FormDataEntryValue | null) {
-  const language = String(value ?? "c");
-  return language === "cpp" ? "cpp" : "c";
-}
-
-function parseRunnerData(formData: FormData) {
-  const makable = parseMakable(formData);
-
-  return {
-    makable,
-    runnerLanguage: makable
-      ? parseRunnerLanguage(formData.get("runnerLanguage"))
-      : null,
-    runnerGithubBranch: makable
-      ? ((formData.get("runnerGithubBranch") as string) || "main")
-      : null,
-    runnerGithubFiles: makable
-      ? parseGithubFiles(formData.get("runnerGithubFiles") as string)
-      : [],
-    runnerSampleStdin: makable
-      ? ((formData.get("runnerSampleStdin") as string) || null)
-      : null,
-  };
-}
-
 export async function getAdminProjects() {
   await requireAuth();
   return prisma.project.findMany({
@@ -104,14 +68,12 @@ export async function createProject(formData: FormData) {
 
   const titleFr = formData.get("titleFr") as string;
   const titleEn = formData.get("titleEn") as string;
-  const runnerData = parseRunnerData(formData);
 
   const project = await prisma.project.create({
     data: {
       link,
       githubLink,
       images,
-      ...runnerData,
       title: {
         create: [
           {
@@ -162,7 +124,6 @@ export async function updateProject(id: string, formData: FormData) {
 
   const titleFr = formData.get("titleFr") as string;
   const titleEn = formData.get("titleEn") as string;
-  const runnerData = parseRunnerData(formData);
 
   const current = await prisma.title.findFirst({
     where: { projectId: id, locale: "fr" },
@@ -173,7 +134,7 @@ export async function updateProject(id: string, formData: FormData) {
   await prisma.$transaction([
     prisma.project.update({
       where: { id },
-      data: { link, githubLink, images, ...runnerData },
+      data: { link, githubLink, images },
     }),
     prisma.title.updateMany({
       where: { projectId: id, locale: "fr" },
