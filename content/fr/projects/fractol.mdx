@@ -1,0 +1,28 @@
+# Le projet
+
+Fract'ol est un explorateur de fractales graphique écrit en C avec la MiniLibX. Il fait découvrir les nombres complexes, les algorithmes itératifs et la programmation graphique. Chaque pixel de la fenêtre correspond à un point du plan complexe, et sa couleur dépend de la vitesse à laquelle la suite associée s'échappe.
+
+---
+
+# Les fractales
+
+- **Mandelbrot** : l'ensemble classique, avec z0 = 0
+- **Julia** : la même formule, avec une constante complexe passée en argument
+- **Burning Ship** : une variante qui utilise des valeurs absolues à chaque itération
+
+---
+
+# Fonctionnalités
+
+- Zoom centré sur le curseur avec la molette de la souris
+- Profondeur d'itération qui s'adapte pendant le zoom
+- Déplacement avec les flèches et remise à zéro de la vue
+- Plusieurs palettes de couleurs avec interpolation douce
+- Double buffering avec les images de la MiniLibX
+- Validation des arguments avec un message d'usage clair
+
+---
+
+# Ce que j'en retiens
+
+Les calculs sur les nombres complexes, la gestion des événements clavier et souris, et l'optimisation d'un rendu pixel par pixel.

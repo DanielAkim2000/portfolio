@@ -1,0 +1,18 @@
+# Le projet
+
+get_next_line est une fonction C qui lit et renvoie une ligne à la fois depuis un descripteur de fichier (un fichier ou l'entrée standard) : `char *get_next_line(int fd);`. Lire avec `read()` seul est pénible quand on veut travailler ligne par ligne : il faut gérer un tampon, détecter le saut de ligne, conserver ce qui n'a pas encore été lu entre deux appels, et traiter la fin de fichier.
+
+Chaque appel renvoie la ligne suivante avec son saut de ligne final, sauf si la dernière ligne n'en a pas.
+
+---
+
+# Les deux parties
+
+- **Obligatoire** : lecture d'un seul descripteur de fichier
+- **Bonus** : la même interface avec une seule variable statique et la prise en charge de **plusieurs descripteurs en même temps**
+
+---
+
+# Ce que j'en retiens
+
+Les **variables statiques** pour conserver un état entre les appels sans le confier à l'appelant, la gestion fine de la mémoire (pas de fuite, même sur les erreurs), et le comportement de `read()` sur des tailles de tampon quelconques.

@@ -1,0 +1,33 @@
+# Le projet
+
+ft_transcendence est le dernier projet du tronc commun de 42, réalisé en équipe de cinq. Nous avons construit une plateforme web multijoueur autour des **échecs en 3D** et des **deux babyfoots physiques de 42 Paris**.
+
+Du côté des échecs, on peut défier un ami (depuis le lobby ou directement dans le chat) ou jouer contre une IA à quatre niveaux, sur un plateau 3D en temps réel, avec des règles entièrement vérifiées par le serveur. Du côté du babyfoot, les tables restent physiques : l'application est la couche numérique qui les organise, avec leur état libre ou occupé, une file d'attente, des défis en 1v1 ou 2v2 et des tournois.
+
+---
+
+# Stack et architecture
+
+- **Front** : React 19 et Three.js pour le plateau 3D
+- **API** : NestJS 11, PostgreSQL via Prisma
+- **Temps réel** : WebSockets (chat, présence, parties)
+- **Déploiement** : application conteneurisée, servie en HTTPS par nginx, qui génère un certificat auto-signé au premier démarrage
+
+---
+
+# Fonctionnalités
+
+- **Comptes et sécurité** : inscription par e-mail, connexion avec l'OAuth 2.0 de l'intra 42, réinitialisation du mot de passe par e-mail, jetons de rafraîchissement hachés et renouvelés, double authentification TOTP avec codes de récupération
+- **Social** : profil, amis, présence en ligne synchronisée, chat privé en temps réel (blocage, messages non lus, indicateur de saisie, accusés de lecture)
+- **Échecs** : règles complètes (échec, mat, pat, répétition, matériel insuffisant, abandon), coups validés côté serveur, historique des parties
+- **Classement** : score validé par l'adversaire, Elo calculé par le serveur, tournois à élimination directe avec tirage au sort et attribution automatique des tables
+- **Gamification** : points d'expérience, niveaux et sept badges débloquables
+- **Administration** : gestion des utilisateurs, rôles, bannissements temporaires ou définitifs
+- **Opérations** : page de statut publique, sauvegardes PostgreSQL automatiques avec script de restauration, export des données et suppression de compte (RGPD)
+- **Interface** : français, anglais et espagnol, thème clair, sombre ou système, personnalisable par utilisateur
+
+---
+
+# Ce que j'en retiens
+
+Travailler à cinq sur une même base de code : découpage des responsabilités, revues de code, conventions communes. Et construire un produit complet, de l'authentification à l'exploitation, en passant par le temps réel et la sécurité.

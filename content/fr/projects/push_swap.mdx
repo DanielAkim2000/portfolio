@@ -1,0 +1,27 @@
+# Le projet
+
+push_swap est un projet d'algorithmique. Il faut trier une pile d'entiers avec un jeu d'instructions très limité et une seconde pile auxiliaire, en produisant la suite d'opérations la plus courte possible.
+
+Le programme valide les arguments (doublons, dépassements, caractères invalides), puis affiche les opérations qui trient la pile A par ordre croissant : sa, sb, ss, pa, pb, ra, rb, rr, rra, rrb, rrr.
+
+---
+
+# L'algorithme
+
+Mon implémentation combine trois idées :
+
+- **Plus longue sous-suite croissante (LIS)** : les éléments qui font déjà partie d'une suite croissante restent dans la pile A, les autres passent dans la pile B
+- **Algorithme Turk** : pour chaque élément de B, on calcule sa position cible dans A et le coût du déplacement, puis on joue le moins cher, en combinant les rotations (rr, rrr) quand c'est rentable
+- **Petits ensembles** : des cas particuliers, comme trier trois nombres, évitent de lancer tout l'algorithme
+
+---
+
+# Bonus : le checker
+
+Le bonus construit un programme `checker` qui lit une suite d'opérations sur l'entrée standard et répond OK ou KO selon que la pile A est bien triée.
+
+---
+
+# Ce que j'en retiens
+
+Raisonner sur le coût d'un algorithme et pas seulement sur sa correction, structurer un programme C autour de listes chaînées, et valider rigoureusement des entrées.

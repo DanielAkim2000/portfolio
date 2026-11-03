@@ -1,0 +1,30 @@
+# The project
+
+ft_irc is an IRC (Internet Relay Chat) server written in C++98, built as a team of three. It handles several clients at once over TCP with non-blocking I/O.
+
+---
+
+# Architecture
+
+The server is built around three modules:
+
+- **Server**: socket setup, epoll-based event loop, connection lifecycle, command dispatch
+- **Client**: per-connection state (nickname, buffers, registration, joined channels)
+- **Channel**: members, operators, modes, topic, invite list
+
+---
+
+# Features
+
+- **Connection**: CAP, PASS, NICK, USER, PING, QUIT, with a server password
+- **Messaging**: PRIVMSG between users and in channels, plus a built-in bot
+- **Channels**: JOIN, PART, TOPIC, INVITE, KICK
+- **Modes**: user mode +i and channel modes i, t, k, o, l
+
+It also includes IRC-style case-insensitive comparison of nicknames and channels, non-blocking reads and writes with an output buffer, a clean shutdown on SIGINT and SIGTERM, and a build with -Wall -Wextra -Werror.
+
+---
+
+# What I take away from it
+
+Low-level network programming (sockets, epoll), reading a protocol from its specification, and working as three on a server that must stay stable when facing unpredictable clients.

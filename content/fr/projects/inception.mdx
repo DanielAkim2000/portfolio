@@ -1,0 +1,28 @@
+# Le projet
+
+Inception est un projet d'administration système : mettre en place une petite infrastructure avec Docker, à l'aide de Docker Compose, dans une machine virtuelle. Chaque service tourne dans son propre conteneur.
+
+---
+
+# L'architecture
+
+- **NGINX** : l'unique point d'entrée, sur le port 443 avec TLS 1.2 et 1.3
+- **WordPress et PHP-FPM** : l'application web
+- **MariaDB** : la base de données
+
+---
+
+# Les choix à comprendre
+
+Le projet oblige à comparer des notions que l'on confond souvent :
+
+- **Docker contre machine virtuelle** : une VM émule un système entier avec son propre noyau, un conteneur partage celui de l'hôte et n'isole que la couche applicative, ce qui le rend bien plus léger
+- **Secrets contre variables d'environnement** : les variables sont en clair et visibles dans les journaux ou les processus, alors que les secrets Docker sont montés comme des fichiers et ne sont pas exposés dans l'environnement
+- **Réseau Docker contre réseau hôte** : un réseau bridge isole les conteneurs et les fait communiquer par le nom de leur service
+- **Volumes nommés contre bind mounts** : les volumes nommés sont gérés par Docker et plus portables, les bind mounts dépendent de l'arborescence de la machine
+
+---
+
+# Ce que j'en retiens
+
+Écrire ses propres Dockerfile, orchestrer plusieurs services avec Compose, sécuriser le point d'entrée en TLS et gérer les secrets proprement. Des compétences que j'ai ensuite mises en pratique pour déployer ce portfolio et Matunda.

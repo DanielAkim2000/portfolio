@@ -1,0 +1,18 @@
+# Le projet
+
+Philosophers est une implémentation du problème classique des philosophes qui dînent, un défi de programmation concurrente. Des philosophes sont assis autour d'une table ronde et alternent entre manger, dormir et penser. Chacun a besoin de deux fourchettes, partagées avec ses voisins, pour manger. Il faut éviter les interblocages et les accès concurrents aux données, sans qu'un philosophe meure de faim inutilement.
+
+---
+
+# Deux versions
+
+- **Obligatoire** : un thread par philosophe, avec des mutex pour protéger les fourchettes et l'état partagé
+- **Bonus** : un processus par philosophe, avec des sémaphores
+
+Le programme prend le nombre de philosophes, le temps avant de mourir sans manger, le temps pour manger, le temps pour dormir, et en option le nombre de repas après lesquels la simulation s'arrête.
+
+---
+
+# Ce que j'en retiens
+
+La synchronisation entre threads et entre processus, la prévention des deadlocks et des data races, et la précision du temps dans une simulation où quelques millisecondes comptent.

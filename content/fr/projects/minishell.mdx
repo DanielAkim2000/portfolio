@@ -1,0 +1,32 @@
+# Le projet
+
+minishell est une réimplémentation d'un petit shell inspiré de bash, réalisée en binôme dans le tronc commun de 42, en C. Le but est de comprendre ce qui se passe réellement entre le moment où l'on tape une commande et celui où elle s'exécute.
+
+---
+
+# Architecture
+
+Le shell fonctionne comme un petit compilateur, en quatre étapes :
+
+- **Lexer** : découpe la ligne en jetons (mots, opérateurs, redirections, parenthèses) en suivant les segments entre guillemets
+- **Parser** : valide la syntaxe et construit un arbre syntaxique (commandes, pipes, redirections, ET / OU, sous-shells)
+- **Expander** : développe les variables (dont le code de retour), applique les règles de guillemets, gère les heredocs et les jokers
+- **Exécuteur** : parcourt l'arbre, crée les processus et les pipes, applique les redirections, lance les builtins dans le processus parent quand il le faut, et trouve les binaires dans le PATH
+
+---
+
+# Fonctionnalités
+
+- Prompt interactif avec readline (édition de ligne et historique), et mode non interactif
+- Guillemets simples et doubles, variables d'environnement et code de retour
+- Pipes et redirections, dont les heredocs
+- Opérateurs logiques et sous-shells avec des parenthèses
+- Expansion des jokers
+- Builtins : echo, cd, pwd, export, unset, env, exit
+- Gestion des signaux (`Ctrl-C`, `Ctrl-D` et `Ctrl-\`) conforme au comportement de bash
+
+---
+
+# Ce que j'en retiens
+
+La gestion des processus Unix (fork, pipes, descripteurs de fichiers, signaux) et la conception d'un parseur propre. Le projet embarque aussi ma propre bibliothèque : libft, ft_printf et get_next_line.

@@ -1,0 +1,18 @@
+# The project
+
+Philosophers is an implementation of the classic dining philosophers problem, a concurrent programming challenge. Philosophers sit at a round table and alternate between eating, sleeping and thinking. Each needs two forks, shared with their neighbours, to eat. The program must avoid deadlocks and data races, without letting a philosopher starve needlessly.
+
+---
+
+# Two versions
+
+- **Mandatory**: one thread per philosopher, with mutexes protecting the forks and the shared state
+- **Bonus**: one process per philosopher, with semaphores
+
+The program takes the number of philosophers, the time before dying without eating, the time to eat, the time to sleep, and optionally the number of meals after which the simulation stops.
+
+---
+
+# What I take away from it
+
+Synchronisation between threads and between processes, preventing deadlocks and data races, and timing accuracy in a simulation where a few milliseconds matter.

@@ -1,0 +1,18 @@
+# The project
+
+get_next_line is a C function that reads and returns one line at a time from a file descriptor (a file or standard input): `char *get_next_line(int fd);`. Reading with `read()` alone is awkward when you want to work line by line: you have to manage a buffer, detect the newline, keep what has not been consumed between calls, and handle the end of the file.
+
+Each call returns the next line with its trailing newline, unless the last line has none.
+
+---
+
+# The two parts
+
+- **Mandatory**: reading a single file descriptor
+- **Bonus**: the same interface with one static variable and support for **several descriptors at the same time**
+
+---
+
+# What I take away from it
+
+**Static variables** to keep state between calls without leaving it to the caller, careful memory management (no leaks, even on errors), and how `read()` behaves with arbitrary buffer sizes.

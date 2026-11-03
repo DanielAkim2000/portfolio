@@ -1,0 +1,22 @@
+# The project
+
+pipex recreates the behaviour of shell pipelines in C. In its mandatory part, the program mimics the command `< infile cmd1 | cmd2 > outfile`: it creates a pipe between two child processes, the first reads `infile` and runs `cmd1`, the second runs `cmd2` and writes to `outfile`.
+
+---
+
+# The bonus
+
+- **Multiple pipes**: any number of chained commands
+- **here_doc**: heredoc-style input, like `cmd << LIMITER | cmd1 | cmd2 >> outfile`
+
+---
+
+# Code organisation
+
+The code is split into modules: initialisation and command parsing, resolving executables through the PATH, creating processes and redirections, heredoc handling, error handling and memory cleanup. It reuses my libft library and get_next_line to read the heredoc.
+
+---
+
+# What I take away from it
+
+How a Unix pipe really works: fork, redirecting file descriptors with dup2, exec, and releasing resources cleanly when a command fails.

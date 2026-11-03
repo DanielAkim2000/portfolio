@@ -1,0 +1,29 @@
+# Le projet
+
+cub3D est un petit moteur 3D à la première personne écrit en C avec la MiniLibX, réalisé en binôme. Il s'inspire de la technique de raycasting du Wolfenstein 3D d'origine : on affiche l'intérieur d'un labyrinthe du point de vue du joueur.
+
+---
+
+# Comment ça marche
+
+- Lecture d'un fichier de scène `.cub` : textures, couleurs du sol et du plafond, carte
+- Validation complète de la scène, avec des messages d'erreur explicites
+- Un raycaster en temps réel : pour chaque colonne de l'écran, on lance un rayon, on trouve le mur touché et on en déduit la hauteur à dessiner
+- Quatre textures de mur selon l'orientation (nord, sud, est, ouest)
+- Déplacements avec W, A, S, D et rotation de la caméra avec les flèches
+
+---
+
+# Bonus réalisés
+
+- Collisions avec les murs
+- Minimap en surimpression
+- Portes qui s'ouvrent et se ferment
+- Sprites animés : une torche dans le décor et l'animation de l'arme à l'écran
+- Rotation de la caméra à la souris
+
+---
+
+# Ce que j'en retiens
+
+Les mathématiques du rendu (vecteurs, projections, algorithme de parcours de grille), la performance d'une boucle de rendu en C, et l'analyse robuste d'un fichier d'entrée.

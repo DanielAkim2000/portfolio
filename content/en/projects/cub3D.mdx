@@ -1,0 +1,29 @@
+# The project
+
+cub3D is a small first-person 3D engine written in C with MiniLibX, built as a pair project. It is inspired by the raycasting technique of the original Wolfenstein 3D: it draws the inside of a maze from the player's point of view.
+
+---
+
+# How it works
+
+- Reads a `.cub` scene file: textures, floor and ceiling colours, map
+- Fully validates the scene, with explicit error messages
+- A real-time raycaster: for each screen column, it casts a ray, finds the wall it hits and deduces the height to draw
+- Four wall textures depending on orientation (north, south, east, west)
+- Movement with W, A, S, D and camera rotation with the arrow keys
+
+---
+
+# Bonus features
+
+- Wall collisions
+- Minimap overlay
+- Doors that open and close
+- Animated sprites: a torch in the scene and the weapon animation on screen
+- Mouse camera rotation
+
+---
+
+# What I take away from it
+
+The maths of rendering (vectors, projections, grid traversal), the performance of a render loop in C, and robust parsing of an input file.

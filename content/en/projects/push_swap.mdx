@@ -1,0 +1,27 @@
+# The project
+
+push_swap is an algorithmics project. A stack of integers must be sorted using a very limited instruction set and a second auxiliary stack, producing the shortest possible sequence of operations.
+
+The program validates its arguments (duplicates, overflows, invalid characters), then prints the operations that sort stack A in ascending order: sa, sb, ss, pa, pb, ra, rb, rr, rra, rrb, rrr.
+
+---
+
+# The algorithm
+
+My implementation combines three ideas:
+
+- **Longest increasing subsequence (LIS)**: elements that already belong to an increasing sequence stay on stack A, the others are pushed to stack B
+- **Turk algorithm**: for each element of B, compute its target position in A and the cost of the move, then play the cheapest one, combining rotations (rr, rrr) when worthwhile
+- **Small sets**: special cases, such as sorting three numbers, avoid running the full algorithm
+
+---
+
+# Bonus: the checker
+
+The bonus builds a `checker` program that reads a sequence of operations from standard input and answers OK or KO depending on whether stack A ends up sorted.
+
+---
+
+# What I take away from it
+
+Reasoning about the cost of an algorithm and not only its correctness, structuring a C program around linked lists, and validating input rigorously.

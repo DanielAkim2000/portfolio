@@ -1,0 +1,27 @@
+# The project
+
+ft_printf reimplements the C standard library function printf. The educational goal is to master **variadic functions** (`stdarg.h`). The function parses a format string, interprets the conversions, fetches the matching arguments and writes the result to standard output, returning the number of printed characters.
+
+The deliverable is a static library, `libftprintf.a`, built on top of my own libft.
+
+---
+
+# Features
+
+- **Conversions**: character, string, pointer, signed and unsigned integers, hexadecimal in lower and upper case, and the percent sign
+- **Bonus**: the alignment, sign, space, zero-padding and alternate-form flags, plus width and precision
+
+---
+
+# Organisation
+
+- An entry point that walks the string and dispatches conversions
+- A parser that reads flags, width, precision and type into a structure
+- One handler per conversion type
+- Padding helpers for width and precision
+
+---
+
+# What I take away from it
+
+Variadic functions in C, designing a format parser, and care with edge cases: null pointer, null string, extreme values.

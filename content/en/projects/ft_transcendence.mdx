@@ -1,0 +1,33 @@
+# The project
+
+ft_transcendence is the last project of the 42 common core, built as a team of five. We made a multiplayer web platform around **3D online chess** and the **two physical foosball (babyfoot) tables of 42 Paris**.
+
+On the chess side, you can challenge a friend (from the lobby or straight from the chat) or play an AI with four difficulty levels, on a real-time 3D board with rules fully enforced by the server. On the foosball side, the tables stay physical: the app is the digital layer that organises them, with free or busy status, a queue, 1v1 or 2v2 challenges and tournaments.
+
+---
+
+# Stack and architecture
+
+- **Front**: React 19 and Three.js for the 3D board
+- **API**: NestJS 11, PostgreSQL through Prisma
+- **Real time**: WebSockets (chat, presence, games)
+- **Deployment**: containerised application served over HTTPS by nginx, which generates a self-signed certificate on first start
+
+---
+
+# Features
+
+- **Accounts and security**: email sign-up, 42 intra OAuth 2.0 login, password reset by email, hashed and rotating refresh tokens, TOTP two-factor authentication with recovery codes
+- **Social**: profile, friends, online presence synced across tabs, private real-time chat (blocking, unread counts, typing indicators, read receipts)
+- **Chess**: complete rules (check, mate, stalemate, repetition, insufficient material, resignation), server-validated moves, game history
+- **Ranking**: opponent-validated score, server-computed Elo, single-elimination tournaments with random draw and automatic table assignment
+- **Gamification**: experience points, levels and seven unlockable badges
+- **Administration**: user management, roles, temporary or permanent bans
+- **Operations**: public status page, automated PostgreSQL backups with a restore script, data export and account deletion (GDPR)
+- **Interface**: English, French and Spanish, light, dark or system theme, customisable per user
+
+---
+
+# What I take away from it
+
+Working as five on a single codebase: splitting responsibilities, code reviews, shared conventions. And building a complete product, from authentication to operations, including real time and security.

@@ -1,0 +1,32 @@
+# The project
+
+minishell is a small shell inspired by bash, written in C as a pair project in the 42 common core. The goal is to understand what really happens between typing a command and running it.
+
+---
+
+# Architecture
+
+The shell works like a small compiler, in four stages:
+
+- **Lexer**: splits the line into tokens (words, operators, redirections, parentheses) while tracking quoted segments
+- **Parser**: validates the syntax and builds a syntax tree (commands, pipes, redirections, AND / OR, subshells)
+- **Expander**: expands variables (including the exit status), applies quoting rules, handles heredocs and wildcards
+- **Executor**: walks the tree, creates processes and pipes, applies redirections, runs builtins in the parent process when needed, and resolves binaries through the PATH
+
+---
+
+# Features
+
+- Interactive prompt with readline (line editing and history), plus a non-interactive mode
+- Single and double quotes, environment variables and exit status
+- Pipes and redirections, including heredocs
+- Logical operators and subshells with parentheses
+- Wildcard expansion
+- Builtins: echo, cd, pwd, export, unset, env, exit
+- Signal handling (`Ctrl-C`, `Ctrl-D` and `Ctrl-\`) consistent with bash behaviour
+
+---
+
+# What I take away from it
+
+Unix process management (fork, pipes, file descriptors, signals) and how to design a clean parser. The project also embeds my own library: libft, ft_printf and get_next_line.

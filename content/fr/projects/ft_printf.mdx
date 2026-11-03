@@ -1,0 +1,27 @@
+# Le projet
+
+ft_printf réimplémente la fonction printf de la bibliothèque C standard. L'objectif pédagogique est de maîtriser les **fonctions à nombre variable d'arguments** (`stdarg.h`). La fonction analyse une chaîne de format, interprète les conversions, récupère les arguments correspondants et écrit le résultat sur la sortie standard, en renvoyant le nombre de caractères affichés.
+
+Le livrable est une bibliothèque statique, `libftprintf.a`, construite sur ma propre libft.
+
+---
+
+# Fonctionnalités
+
+- **Conversions** : caractère, chaîne, pointeur, entier signé et non signé, hexadécimal en minuscules et majuscules, et le pourcentage
+- **Bonus** : les drapeaux d'alignement, de signe, d'espace, de zéros et de forme alternative, ainsi que la largeur et la précision
+
+---
+
+# Organisation
+
+- Un point d'entrée qui parcourt la chaîne et distribue les conversions
+- Un analyseur qui lit les drapeaux, la largeur, la précision et le type dans une structure
+- Un traitement par type de conversion
+- Des fonctions de remplissage pour la largeur et la précision
+
+---
+
+# Ce que j'en retiens
+
+Les variadiques en C, la conception d'un analyseur de format, et le soin des cas limites : pointeur nul, chaîne nulle, valeurs extrêmes.

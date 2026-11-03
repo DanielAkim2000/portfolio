@@ -1,0 +1,22 @@
+# Le projet
+
+pipex recrée en C le comportement des pipelines du shell. Dans sa partie obligatoire, le programme reproduit la commande `< infile cmd1 | cmd2 > outfile` : il crée un pipe entre deux processus fils, le premier lit `infile` et lance `cmd1`, le second lance `cmd2` et écrit dans `outfile`.
+
+---
+
+# Le bonus
+
+- **Plusieurs pipes** : un nombre quelconque de commandes enchaînées
+- **here_doc** : une entrée de type heredoc, comme `cmd << LIMITER | cmd1 | cmd2 >> outfile`
+
+---
+
+# Organisation du code
+
+Le code est découpé en modules : initialisation et analyse des commandes, résolution des exécutables dans le PATH, création des processus et des redirections, gestion du heredoc, gestion des erreurs et libération de la mémoire. Il réutilise ma bibliothèque libft ainsi que get_next_line pour lire le heredoc.
+
+---
+
+# Ce que j'en retiens
+
+Le fonctionnement concret d'un pipe Unix : fork, redirection des descripteurs de fichiers avec dup2, exec, et la libération propre des ressources quand une commande échoue.

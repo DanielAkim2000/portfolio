@@ -222,7 +222,13 @@ export async function deleteProject(id: string) {
     select: { locale: true, title: true },
   });
 
-  await prisma.project.delete({ where: { id } });
+  // Les clés étrangères sont en SET NULL : sans ça, titres, contenus et réactions restent orphelins
+  await prisma.$transaction([
+    prisma.reaction.deleteMany({ where: { projectId: id } }),
+    prisma.content.deleteMany({ where: { projectId: id } }),
+    prisma.title.deleteMany({ where: { projectId: id } }),
+    prisma.project.delete({ where: { id } }),
+  ]);
   await Promise.all(
     titles.map(({ locale, title }) => deleteMdxFile(locale, "projects", title))
   );
